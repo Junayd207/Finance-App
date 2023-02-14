@@ -20,6 +20,14 @@ import { getDatabase, ref, onValue} from "firebase/database";
 function App() {
     const [data, setData] = useState({})
 
+    const d = new Date()
+    const todaysDate =  (d.getMonth()+1) < 10 ?
+                        d.getFullYear() + "-0" + (d.getMonth()+1) + "-" + d.getDate() :
+                        d.getFullYear() + (d.getMonth()+1) + "-" + d.getDate()
+
+
+
+
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(() => {
             unsub()
@@ -33,29 +41,6 @@ function App() {
     },[auth.currentUser])
     console.log(data)
 
-/*
-    async function fetchData() {
-            if(auth.currentUser){
-                const docRef = doc(db, "users", auth.currentUser.uid)
-                const docSnap = await getDoc(docRef)
-                setData(docSnap.data())
-            }
-        }
-    fetchData()
-*/
-
-
-    /*const q = query(doc(db, "users", auth.currentUser.uid))
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                let usersArr = []
-                querySnapshot.forEach(doc => {
-                    usersArr.push({...doc.data()})
-                })
-                setData(usersArr)
-            })
-            return() => unsubscribe()*/
-
-
   return (
     <div>
       <Routes>
@@ -64,13 +49,13 @@ function App() {
         <Route path="/dashboard" element={
             <div className="dashboard">
                 <Sidebar />
-                <Dashboard data={data}/>
+                <Dashboard data={data} todaysDate={todaysDate}/>
             </div>
         }/>
         <Route path="/addCash" element={
             <div className="addCash">
                 <Sidebar/>
-                <AddCash  data={data}/>
+                <AddCash  data={data}  todaysDate={todaysDate}/>
             </div>
         }/>
         <Route path="/investments" element={

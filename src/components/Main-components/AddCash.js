@@ -4,26 +4,59 @@ import "../../App"
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import {updateDoc, doc, increment} from "firebase/firestore";
 import {db,auth} from "../../firebase";
+import CloseIcon from '@mui/icons-material/Close';
 
-function AddCash({data}) {
+
+function AddCash({data, todaysDate}) {
     const [source, setSource] = useState("")
     const [sum, setSum] = useState("")
-    const [date, setDate] = useState("")
+    const [date, setDate] = useState(todaysDate)
 
     function resetValues() {
         setSource("")
         setSum("")
     }
-    console.log("the length is " + sum.length)
 
     const addCash = async() => {
-        await updateDoc(doc(db,"users",auth.currentUser.uid), {
-            transactions: [{type:"addCash",source:source, sum:parseInt(sum), date:date},...(data.transactions)],
-            balance: increment(parseInt(sum)),
-            savings: increment(parseInt(sum))
-        })
-        resetValues()
+        if(source.length < 1){
+            setSourceShort(true)
+        }
+        if(sum.length < 1){
+            setSumShort(true)
+        }
+        if(date.length < 1){
+            setDateShort(true)
+        }
+        if(source.length > 0 && sum.length > 0 && date.length > 0){
+            await updateDoc(doc(db,"users",auth.currentUser.uid), {
+                transactions: [{type:"addCash",source:source, sum:parseFloat(sum), date:date},...(data.transactions)],
+                balance: increment(parseFloat(sum)),
+                savings: increment(parseFloat(sum))
+            })
+            resetValues()
+        }
     }
+
+    const [sourceShort, setSourceShort] = useState(false)
+    const [sumShort, setSumShort] = useState(false)
+    const [dateShort, setDateShort] = useState(false)
+
+    function resetErrorValues(){
+        setSourceShort(false)
+        setSumShort(false)
+        setDateShort(false)
+    }
+ 
+    const errorBox = (sourceShort || sumShort || dateShort) ?
+        <div className="error-box">
+            <div className="display-flex-between">
+                <p className="error-title">Error</p>
+                <CloseIcon onClick={(e) => resetErrorValues()} sx={{cursor: "pointer"}}/>
+            </div>
+            {sourceShort && <p className="error-text">Please Enter A Valid Source</p>}
+            {sumShort && <p className="error-text">Please Enter A Valid Sum</p>}
+            {dateShort && <p className="error-text">Please Select A Date</p>}
+        </div> : null
 
     return (
     <section className="addCash">
@@ -33,6 +66,7 @@ function AddCash({data}) {
                 <div className="addCash-functions-container">
                     <div className="addCash-function">
                         <h3 className="addCash-function-title">Add Cash</h3>
+                        {errorBox}
                         <div className="source-input"> 
                             <h1 className="source-input-text">Source:</h1>
                             <input 
@@ -55,6 +89,7 @@ function AddCash({data}) {
                                 type="date"
                                 className="date-input-field"
                                 onChange={(event) => {setDate(event.target.value)}}
+                                defaultValue={todaysDate}
                             />
                         </div>
                         <div className="submit-addCash"> 

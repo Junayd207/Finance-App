@@ -6,42 +6,60 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import HomeIcon from '@mui/icons-material/Home';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import {db,auth} from "../../firebase";
-import { doc, updateDoc } from "firebase/firestore"; 
+import { doc, updateDoc, increment } from "firebase/firestore"; 
 import CloseIcon from '@mui/icons-material/Close';
 
 
-function Dashboard({data}) {
+function Dashboard({data, todaysDate}) {
 
     const [purchase, setPurchase] = useState("")
     const [sum, setSum] = useState("")
-    const [date, setDate] = useState("")
+    const [date, setDate] = useState(todaysDate)
     const [category, setCategory] = useState("")
 
+    console.log(date)
     function resetValues() {
         setPurchase("")
         setSum("")
-        setDate("")
+        setDate(todaysDate)
         setCategory("")
-    }
+    } 
 
-    console.log(data)
-    const addExpenditure = async() => {
-        await updateDoc(doc(db,"users",auth.currentUser.uid), {
-            transactions: [{type:"expenditure", purchase:purchase, sum:sum, date:date, category:category},...(data.transactions)]
-        })
-        resetValues()
-    }
-
-    const [purchaseShort,setPurchaseShort] = useState(true)
-    const [sumShort,setSumShort] = useState(true)
-    const [dateShort,setDateShort] = useState(true)
-    const [categoryShort,setCategoryShort] = useState(true)
+    const [purchaseShort,setPurchaseShort] = useState(false)
+    const [sumShort,setSumShort] = useState(false)
+    const [dateShort,setDateShort] = useState(false)
+    const [categoryShort,setCategoryShort] = useState(false)
 
     function resetErrorValues(){
         setPurchaseShort(false)
         setSumShort(false)
         setDateShort(false)
         setCategoryShort(false)
+    }
+
+    const addExpenditure = async() => {
+        resetErrorValues()
+        if(purchase.length < 1){
+            setPurchaseShort(true)
+        }
+        if(sum.length < 1){
+            setSumShort(true)
+        }
+        if(date.length < 1){
+            setDateShort(true)
+        }
+        if(category.length < 1){
+            setCategoryShort(true)
+        }
+        if(purchase.length > 0 && sum.length > 0 && date.length > 0 && category.length > 0){
+            await updateDoc(doc(db,"users",auth.currentUser.uid), {
+                transactions: [{type:"expenditure", purchase:purchase, sum:sum, date:date, category:category},...(data.transactions)],
+                balance: increment(-sum),
+                savings: increment(-sum)
+            })
+            resetValues()
+            resetErrorValues()
+        }
     }
 
     const errorBox = (purchaseShort || sumShort || dateShort || categoryShort) ?
@@ -138,6 +156,7 @@ function Dashboard({data}) {
                                 type="date"
                                 className="expenditure-date-input-field"
                                 onChange={(event) => {setDate(event.target.value)}}
+                                defaultValue={todaysDate}
                             />
                         </div>
                         <div className="expenditure-category">

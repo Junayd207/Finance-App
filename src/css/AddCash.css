@@ -151,3 +151,25 @@
     margin:10px 0;
     font-size:16px;
 }
+
+.error-box{
+    background:#ffdce0;
+    color:#922c2b;
+    padding:10px 20px;
+    margin:-15px auto 15px;
+    border: 1px solid #922c2b;
+    border-radius: 10px;
+    width:70%;
+}
+
+.error-text{
+    padding:0;
+    margin:0;
+    font-size:12px;
+}
+
+.error-title{
+    padding:0;
+    margin:0;
+    font-size:16px;
+}
