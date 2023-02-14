@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;900&display=swap');
+
+body{
+    font-family: 'Poppins', sans-serif;    
+    background-color: #D8DEE8;
+}
+
+.display-flex-column{
+    width:100%;
+    display:flex;
+    flex-direction: column;
+}
+
+.display-flex-between{
+    width:100%;
+    display:flex;
+    justify-content: space-between;
+}
+
+.signup{
+    background-color: var(--blue-shade-8);
+    color:black;
+    max-width:500px;
+    margin:100px auto ;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    border-radius:30px;
+}
+
+.signup-title{
+    color:var(--blue-shade-1);
+    font-weight:900;
+    margin-bottom:80px;
+}
+
+.username-input{
+    background-color:var(--blue-shade-9);
+    width:80%;
+    margin:0 20px 20px;
+    border-radius:10px;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.username-text{
+    color:black;
+    margin:0;
+    font-size:12px;
+    padding-bottom:5px;
+    font-weight:500;
+}
+
+.username-input-field{
+    width:90%;
+    border:none;
+    background-color: var(--blue-shade-9);
+    font-weight: 700;
+}
+
+.password-input{
+    background-color:var(--blue-shade-9);
+    width:80%;
+    margin:0 20px 20px;
+    border-radius:10px;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.password-text{
+    color:black;
+    margin:0;
+    font-size:12px;
+    padding-bottom:5px;
+    font-weight:500;
+}
+
+.password-input-field{
+    width:90%;
+    border:none;
+    background-color: var(--blue-shade-9);
+    font-weight: 700;
+}
+
+.signup-button{
+    border-radius: 10px;
+    border:none;
+    width:80%;
+    padding:15px;
+    color:#ffffff;
+    background-color: var(--blue-shade-1);
+    cursor: pointer;
+    font-weight:700;
+}
+
+.existing-account-text{
+    color:white;
+    font-size:12px
+}
+
+.login-link{
+    color:var(--blue-shade-1);
+}
+
+.error-box{
+    background:#ffdce0;
+    color:#922c2b;
+    padding:10px 20px;
+    margin:-30px 20px 30px;
+    border: 1px solid #922c2b;
+    border-radius: 10px;
+    width:70%;
+}
+
+.error-text{
+    padding:0;
+    margin:0;
+    font-size:12px;
+}
+
+.error-title{
+    padding:0;
+    margin:0;
+    font-size:16px;
+}

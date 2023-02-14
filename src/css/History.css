@@ -1,0 +1,18 @@
+.history{
+    flex:0.8;
+    background-color:var(--blue-shade-8);
+}
+
+.history-title{
+    margin:0 auto;
+    padding:20px;
+    background-color:var(--blue-shade-9);
+    color:var(--blue-shade-1);
+    font-size: 20px;
+    font-weight:500;
+    width:100%;
+    height:40px;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+}

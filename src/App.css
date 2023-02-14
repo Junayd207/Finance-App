@@ -1,0 +1,40 @@
+body{
+    --blue-shade-1:#013A63;
+    --blue-shade-2:#01497C;
+    --blue-shade-3:#014F86;
+    --blue-shade-4:#2A6F97;
+    --blue-shade-5:#2C7DA0;
+    --blue-shade-6:#468FAF;
+    --blue-shade-7:#61A5C2;
+    --blue-shade-8:#89C2D9;
+    --blue-shade-9:#A9D6E5;
+    color:white;
+}
+
+.dashboard{
+    display:flex;
+}
+
+.addCash{
+    display:flex;
+}
+
+.investments{
+    display:flex;
+}
+
+.forecast{
+    display:flex;
+}
+
+.history{
+    display:flex;
+}
+
+.profile{
+    display:flex;
+}
+
+.settings{
+    display:flex;
+}

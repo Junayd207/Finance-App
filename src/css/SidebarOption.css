@@ -1,0 +1,19 @@
+.sidebarOption{
+    display:flex;
+    text-align: center;
+    padding:10px;
+    border-bottom: 2px solid var(--blue-shade-9);
+}
+
+.sidebarOption:hover{
+    background-color: var(--blue-shade-8);
+    color:white;
+    transition: color 200ms ease-out;
+    cursor: pointer;
+}
+
+.sidebarOption-text{
+    margin:0;
+    padding-left: 10px;
+    text-align: center;
+}

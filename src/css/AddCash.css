@@ -1,0 +1,153 @@
+.addCash{
+    display:flex;
+    background-color:var(--blue-shade-8);
+    height:100vh;
+    flex:0.8;
+}
+
+.flex-direction-column{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+}
+
+.addCash-title{
+    margin:0 auto ;
+    padding:20px 20px;
+    background-color:var(--blue-shade-9);
+    color:var(--blue-shade-1);
+    font-size: 20px;
+    font-weight:500;
+    width:calc(100% - 40px);
+    height:40px;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.addCash-boxes-container{
+    display:flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.addCash-function{
+    background: var(--blue-shade-7);
+    border-radius:10px;
+    padding:0;
+    margin:20px;
+}
+
+.addCash-function-title{
+    margin:0 0 30px 0;
+    padding:10px 200px 10px 20px;
+    border-radius:10px 10px 0 0;
+    background:var(--blue-shade-1);
+}
+
+.source-input{
+    display:flex;
+    justify-content: space-between;
+    margin: 0 20px 20px 20px;
+}
+
+.source-input-text{
+    margin:0;
+    font-size:16px;
+}
+
+.source-input-field{
+    border-radius:2px;
+    border:none;
+    width:70%;
+    font-family: 'Poppins', sans-serif;    
+}
+
+.source-input-field:focus{
+    outline:none;
+}
+
+.sum-input{
+    display:flex;
+    justify-content: space-between;
+    margin: 0 20px 10px 20px;
+}
+
+.sum-input-text{
+    margin:0;
+    font-size:16px;
+}
+
+.sum-input-field{
+    border-radius:2px;
+    border:none;
+    width:70%;
+    font-family: 'Poppins', sans-serif;    
+}
+
+.sum-input-field:focus{
+    outline:none;
+}
+
+.date-input{
+    text-align: center;
+    margin-bottom:10px;
+    padding:0;
+}
+
+.date-input-field{
+    font-family: 'Poppins', sans-serif;    
+}
+
+.submit-addCash{
+    text-align: center;
+}
+
+.submit-addCash-button{
+    border:none;
+    font-family: 'Poppins', sans-serif;    
+    background: var(--blue-shade-1);
+    color:white;
+    padding: 5px 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.submit-addCash-button:active {
+    transform: scale(0.95);
+}
+
+
+
+.assets-overview{
+    background:var(--blue-shade-7);
+    margin:20px;
+    margin-left:0;
+    border-radius: 10px;
+}
+
+.assets-overview-title-container{
+    display:flex;
+    align-items:center;
+    padding: 10px 20px 10px 0;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--blue-shade-1);
+    margin-bottom:20px;
+}
+  
+.assets-overview-title{
+    padding:0 100px 0 20px;  /* padding here determines box width*/
+    margin:0;
+}
+
+.assets-overview-container{
+    margin: 0 20px;
+    display:flex;
+    justify-content: space-between;
+}
+
+.assets-text{
+    margin:10px 0;
+    font-size:16px;
+}
