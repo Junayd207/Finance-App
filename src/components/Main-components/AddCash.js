@@ -7,11 +7,11 @@ import {db,auth} from "../../firebase";
 import CloseIcon from '@mui/icons-material/Close';
 
 
-function AddCash({data, todaysDate}) {
+function AddCash({data, todaysDate, round2dp}) {
     const [source, setSource] = useState("")
     const [sum, setSum] = useState("")
     const [date, setDate] = useState(todaysDate)
-
+    
     function resetValues() {
         setSource("")
         setSum("")
@@ -29,9 +29,9 @@ function AddCash({data, todaysDate}) {
         }
         if(source.length > 0 && sum.length > 0 && date.length > 0){
             await updateDoc(doc(db,"users",auth.currentUser.uid), {
-                transactions: [{type:"addCash",source:source, sum:parseFloat(sum), date:date},...(data.transactions)],
-                balance: increment(parseFloat(sum)),
-                savings: increment(parseFloat(sum))
+                transactions: [{type:"Add-Cash",source:source, sum:round2dp(sum), date:date},...(data.transactions)],
+                balance: increment(round2dp(sum)),
+                savings: increment(round2dp(sum))
             })
             resetValues()
         }
@@ -80,6 +80,7 @@ function AddCash({data, todaysDate}) {
                             <input 
                                 className="sum-input-field"
                                 type="number"
+                                onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
                                 value={sum}
                                 onChange={(event) => {setSum(event.target.value)}}
                             />
@@ -97,22 +98,22 @@ function AddCash({data, todaysDate}) {
                         </div>
                     </div>
                 </div>
-                <div className="assets-overview">
+                <div className="addcash-assets-overview">
                     <div className="assets-overview-title-container">
                         <h3 className="assets-overview-title">Balances</h3>
                         <LocalAtmIcon/>
                     </div>
                     <div className="assets-overview-container">
                         <h1 className="assets-text">Total:</h1>
-                        <h1 className="assets-text">£{data.balance}</h1>
+                        <h1 className="assets-text">£{round2dp(data.balance)}</h1>
                     </div>
                     <div className="assets-overview-container">
                         <h1 className="assets-text">Savings:</h1>
-                        <h1 className="assets-text">£{data.savings}</h1>
+                        <h1 className="assets-text">£{round2dp(data.savings)}</h1>
                     </div>
                     <div className="assets-overview-container">
                         <h1 className="assets-text">Investments:</h1>
-                        <h1 className="assets-text">£{data.investments}</h1>
+                        <h1 className="assets-text">£{round2dp(data.investments)}</h1>
                     </div>
                 </div>
             </div>

@@ -44,7 +44,7 @@ function Signup() {
                 if(password === confirmPassword){
                     await createUserWithEmailAndPassword(auth,email,password).then
                     (async() => {
-                        await setDoc(doc(db,"users",auth.currentUser.uid),{balance:0, savings:0, investments:0, email:email, transactions:[],})
+                        await setDoc(doc(db,"users",auth.currentUser.uid),{balance:0, savings:0, investments:0, email:email, transactions:[], shopping:0, fooddrinks:0, billsutilities:0, others:0,})
                         window.location.href='/dashboard'
                     }).catch((error) => {
                         if (error.code === "auth/email-already-in-use") {

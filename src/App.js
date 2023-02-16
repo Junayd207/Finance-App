@@ -10,6 +10,8 @@ import Forecast from './components/Main-components/Forecast';
 import History from './components/Main-components/History';
 import Profile from './components/Main-components/Profile';
 import Settings from './components/Main-components/Settings';
+import axios from "axios";
+
 
 import {Routes, Route} from "react-router-dom"
 import {db, auth} from "./firebase"
@@ -18,6 +20,22 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, onValue} from "firebase/database";
 
 function App() {
+    const [coins, setCoins] = useState([]);
+      useEffect(() => {
+        const getData = async () => {
+            try {
+              const res = await axios.get(
+                "https://api.coingecko.com/api/v3/coins/markets?vs_currency=gbp&order=market_cap_desc&per_page=4&page=1&sparkline=false"
+              );
+              setCoins(res.data);
+            } catch (error) {
+              console.error(error);
+            }
+          };
+          getData()
+      }, []);
+      console.log(coins)
+    
     const [data, setData] = useState({})
 
     const d = new Date()
@@ -25,8 +43,9 @@ function App() {
                         d.getFullYear() + "-0" + (d.getMonth()+1) + "-" + d.getDate() :
                         d.getFullYear() + (d.getMonth()+1) + "-" + d.getDate()
 
-
-
+    function round2dp(num){
+        return Math.round(num*100) / 100
+    }
 
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(() => {
@@ -39,7 +58,6 @@ function App() {
         return() => unsubscribe()
         })
     },[auth.currentUser])
-    console.log(data)
 
   return (
     <div>
@@ -49,19 +67,19 @@ function App() {
         <Route path="/dashboard" element={
             <div className="dashboard">
                 <Sidebar />
-                <Dashboard data={data} todaysDate={todaysDate}/>
+                <Dashboard data={data} todaysDate={todaysDate} round2dp={round2dp}/>
             </div>
         }/>
         <Route path="/addCash" element={
             <div className="addCash">
                 <Sidebar/>
-                <AddCash  data={data}  todaysDate={todaysDate}/>
+                <AddCash  data={data}  todaysDate={todaysDate} round2dp={round2dp}/>
             </div>
         }/>
         <Route path="/investments" element={
             <div className="investments">
                 <Sidebar/>
-                <Investments/>
+                <Investments data={data} coins={coins} round2dp={round2dp}/>
             </div>
         }/>
         <Route path="/forecast" element={
@@ -73,7 +91,7 @@ function App() {
         <Route path="/history" element={
             <div className="history">
                 <Sidebar/>
-                <History/>
+                <History data={data} round2dp={round2dp}/>
             </div>
         }/>
         <Route path="/profile" element={
