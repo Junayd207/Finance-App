@@ -3,11 +3,9 @@ import '../css/Login.css';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PortraitOutlinedIcon from '@mui/icons-material/PortraitOutlined';
 import CloseIcon from '@mui/icons-material/Close';
-import {db, auth} from "../firebase"
+import {auth} from "../firebase"
 import {
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    signOut,
+    signInWithEmailAndPassword
   } from "firebase/auth";
 
 function Login() {
@@ -15,11 +13,13 @@ function Login() {
     const [password, setPassword] = useState("")
 
     const [invalidEmail, setInvalidEmail] = useState(false)
-    const [passwordIncorrect, setpasswordIncorrect] = useState(false)
+    const [invalidUser, setInvalidUser] = useState(false)
+    const [wrongPassword, setWrongPassword] = useState(false)
 
     function resetValues() {
         setInvalidEmail(false)
-        setpasswordIncorrect(false)
+        setInvalidUser(false)
+        setWrongPassword(false)
     }
 
     const signIn = async () =>{
@@ -31,11 +31,14 @@ function Login() {
         else{
             try{
                 await signInWithEmailAndPassword(auth,email,password).then
-                    (() => {
+                    (async() => {
                         window.location.href='/dashboard';
                     }).catch((error) => {
-                        if (error.code == "auth/user-not-found") {
-                            alert("user not found")
+                        if (error.code === "auth/user-not-found") {
+                            setInvalidUser(true)
+                        }
+                        if (error.code === "auth/wrong-password") {
+                            setWrongPassword(true)
                         }
                         console.error(error)
                     })
@@ -45,14 +48,15 @@ function Login() {
         }
     }
 
-    const errorBox = (passwordIncorrect || invalidEmail) ?
+    const errorBox = (invalidUser || wrongPassword || invalidEmail) ?
         <div className="error-box">
             <div className="display-flex-between">
                 <p className="error-title">Error</p>
                 <CloseIcon onClick={(e) => resetValues()} sx={{cursor: "pointer"}}/>
             </div>
-            {invalidEmail && <p className="error-text">Invalid email</p>}
-            {passwordIncorrect && <p className="error-text">Password incorrect, please try again</p>}
+            {invalidEmail && <p className="error-text">Invalid Email</p>}
+            {invalidUser && <p className="error-text">User Not Found</p>}
+            {wrongPassword && <p className="error-text">Password Incorrect, Please Try Again</p>}
         </div> : null
 
 

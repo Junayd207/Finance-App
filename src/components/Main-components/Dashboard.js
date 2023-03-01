@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import '../../css/Dashboard.css';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -11,29 +11,29 @@ import CloseIcon from '@mui/icons-material/Close';
 import {nanoid} from "nanoid"
 
 
-function Dashboard({data, todaysDate, round2dp}) {
+function Dashboard({data, todaysDate, round2dp, investmentsValue,currencySymbol}) {
     var transactionElements = []
     const doit = async() => {
         const transactionsArray = (data.transactions).slice(0, 9)
         transactionElements = transactionsArray.map(transaction => {
             let bgColor = ""
-            if(transaction.category == "Shopping"){
+            if(transaction.category === "Shopping"){
                 bgColor="#014F86"
             }
-            else if(transaction.category == "Food&Drinks"){
+            else if(transaction.category === "Food&Drinks"){
                 bgColor="#2A6f97"
             }
-            else if(transaction.category == "Bills&Utilities"){
+            else if(transaction.category === "Bills&Utilities"){
                 bgColor="#2C7DA0"
             }
-            else if(transaction.category == "Others"){
+            else if(transaction.category === "Others"){
                 bgColor="#468FAF"
             }
             else{
                 bgColor="#38B000"
             }
             let typeColor=""
-            if(transaction.type == "Expenditure"){
+            if(transaction.type === "Expenditure"){
                 typeColor="#ff8fa3"
             }
             else{
@@ -48,7 +48,7 @@ function Dashboard({data, todaysDate, round2dp}) {
                 <div className="transactions-grid-item transactions-grid-item-category" key={nanoid()}
                     style={{backgroundColor:bgColor}}  
                 >{transaction.category ? transaction.category : "Revenue"}</div>
-                <div className="transactions-grid-item transactions-grid-item-sum" key={nanoid()}>£{transaction.sum}</div>
+                <div className="transactions-grid-item transactions-grid-item-sum" key={nanoid()}>{currencySymbol}{transaction.sum}</div>
                 <div className="transactions-grid-item border-right" key={nanoid()}>{transaction.date}</div>
             </div>
             )
@@ -61,6 +61,7 @@ function Dashboard({data, todaysDate, round2dp}) {
     const [date, setDate] = useState(todaysDate)
     const [category, setCategory] = useState("")
 
+    console.log(date)
     function resetValues() {
         setPurchase("")
         setSum("")
@@ -99,10 +100,10 @@ function Dashboard({data, todaysDate, round2dp}) {
                 transactions: [{type:"Expenditure", purchase:purchase, sum:round2dp(sum), date:date, category:category},...(data.transactions)],
                 balance: increment(-round2dp(sum)),
                 savings: increment(-round2dp(sum)),
-                shopping: (category == "Shopping" ? increment(round2dp(sum)): increment(0)),
-                fooddrinks: (category == "Food&Drinks" ? increment(round2dp(sum)): increment(0)),
-                billsutilities: (category == "Bills&Utilities" ? increment(round2dp(sum)): increment(0)),
-                others: (category == "Others" ? increment(round2dp(sum)): increment(0))
+                shopping: (category === "Shopping" ? increment(round2dp(sum)): increment(0)),
+                fooddrinks: (category === "Food&Drinks" ? increment(round2dp(sum)): increment(0)),
+                billsutilities: (category === "Bills&Utilities" ? increment(round2dp(sum)): increment(0)),
+                others: (category === "Others" ? increment(round2dp(sum)): increment(0))
 
             })
             resetValues()
@@ -134,15 +135,15 @@ function Dashboard({data, todaysDate, round2dp}) {
                     </div>
                     <div className="assets-values-container">
                         <p className="assets-text">Total:</p>
-                        <p className="assets-text">£{round2dp(data.balance)}</p>
+                        <p className="assets-text">{currencySymbol}{round2dp(data.balance + investmentsValue)}</p>
                     </div>
                     <div className="assets-values-container">
                         <p className="assets-text">Savings:</p>
-                        <p className="assets-text">£{round2dp(data.savings)}</p>
+                        <p className="assets-text">{currencySymbol}{round2dp(data.savings)}</p>
                     </div>
                     <div className="assets-values-container">
                         <p className="assets-text">Investments:</p>
-                        <p className="assets-text">£{round2dp(data.investments)}</p>
+                        <p className="assets-text">{currencySymbol}{round2dp(investmentsValue)}</p>
                     </div>
                 </div>
                 <div className="spend" style={{backgroundColor:"#014F86"}}>
@@ -150,28 +151,28 @@ function Dashboard({data, todaysDate, round2dp}) {
                         <h3 className="spend-title">Shopping</h3>
                         <ShoppingCartIcon/>
                     </div>
-                    <h1 className="spend-total">£{round2dp(data.shopping)}</h1>
+                    <h1 className="spend-total">{currencySymbol}{round2dp(data.shopping)}</h1>
                 </div>
                 <div className="spend" style={{backgroundColor:"#2A6F97"}}>
                     <div className="spend-title-container">
                         <h3 className="spend-title" style={{minWidth:"120px"}}>Food & Drinks</h3>
                         <RestaurantIcon/>
                     </div>
-                    <h1 className="spend-total">£{round2dp(data.fooddrinks)}</h1>
+                    <h1 className="spend-total">{currencySymbol}{round2dp(data.fooddrinks)}</h1>
                 </div>
                 <div className="spend" style={{backgroundColor:"#2C7DA0"}}>
                     <div className="spend-title-container">
                         <h3 className="spend-title" style={{minWidth:"120px"}}>Bills & Utilities</h3>
                         <HomeIcon/>
                     </div>
-                    <h1 className="spend-total">£{round2dp(data.billsutilities)}</h1>
+                    <h1 className="spend-total">{currencySymbol}{round2dp(data.billsutilities)}</h1>
                 </div>
                 <div className="spend" style={{backgroundColor:"#468FAF"}}>
                     <div className="spend-title-container">
                         <h3 className="spend-title">Others</h3>
                         <AllInclusiveIcon/>
                     </div>
-                    <h1 className="spend-total">£{round2dp(data.others)}</h1>
+                    <h1 className="spend-total">{currencySymbol}{round2dp(data.others)}</h1>
                 </div>
             </div>
             <div className="flex-direction-row">

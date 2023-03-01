@@ -4,7 +4,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PortraitOutlinedIcon from '@mui/icons-material/PortraitOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import {auth,db} from "../firebase"
-import { doc, setDoc, addDoc, collection,getDocs } from "firebase/firestore"; 
+import { doc, setDoc } from "firebase/firestore"; 
 import {createUserWithEmailAndPassword} from "firebase/auth";
 
 

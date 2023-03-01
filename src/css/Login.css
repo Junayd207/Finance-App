@@ -95,3 +95,25 @@ body{
 .signup-link{
     color:var(--blue-shade-1);
 }
+
+.login .error-box{
+    background:#ffdce0;
+    color:#922c2b;
+    padding:10px 20px;
+    margin:-50px 20px 30px;
+    border: 1px solid #922c2b;
+    border-radius: 10px;
+    width:70%;
+}
+
+.login .error-text{
+    padding:0;
+    margin:0;
+    font-size:12px;
+}
+
+.login .error-title{
+    padding:0;
+    margin:0;
+    font-size:16px;
+}

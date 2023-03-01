@@ -3,6 +3,12 @@
     background-color:var(--blue-shade-8);
 }
 
+.flex-direction-column{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+}
+
 .settings-title{
     margin:0 auto;
     padding:20px;
@@ -15,4 +21,48 @@
     display:flex;
     justify-content: flex-start;
     align-items: center;
+}
+
+.currency-choice-container{
+    display:flex;
+    align-items:center;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background-color: var(--blue-shade-1);
+    margin:40px auto 0;
+    justify-content:center;
+}
+
+.currency-text-container{
+    display:flex;
+    padding-right:50px;
+    align-items: center;
+}
+.currency-text{
+    margin:0;
+    font-size: 20px;
+    padding-right:10px;
+}
+
+.currency-choice{
+    border-radius:2px;
+    border:none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.submit-currency-button{
+    border:none;
+    font-family: 'Poppins', sans-serif;    
+    background: var(--blue-shade-1);
+    color:white;
+    padding: 5px 15px;
+    border-radius: 10px;
+    margin-top:20px;
+    cursor: pointer;
+    width:90px;
+    align-self:center;
+}
+
+.submit-currency-button:active {
+    transform: scale(0.95);
 }

@@ -5,29 +5,29 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import {nanoid} from "nanoid"
 
 
-function History({data, round2dp}) {
+function History({data, round2dp, investmentsValue, currencySymbol}) {
     var transactionElements = []
     const doit = async() => {
         const transactionsArray = (data.transactions).slice(0, 50)
         transactionElements = transactionsArray.map(transaction => {
             let bgColor = ""
-            if(transaction.category == "Shopping"){
+            if(transaction.category === "Shopping"){
                 bgColor="#014F86"
             }
-            else if(transaction.category == "Food&Drinks"){
+            else if(transaction.category === "Food&Drinks"){
                 bgColor="#2A6f97"
             }
-            else if(transaction.category == "Bills&Utilities"){
+            else if(transaction.category === "Bills&Utilities"){
                 bgColor="#2C7DA0"
             }
-            else if(transaction.category == "Others"){
+            else if(transaction.category === "Others"){
                 bgColor="#468FAF"
             }
             else{
                 bgColor="#38B000"
             }
             let typeColor=""
-            if(transaction.type == "Expenditure"){
+            if(transaction.type === "Expenditure"){
                 typeColor="#ff8fa3"
             }
             else{
@@ -42,7 +42,7 @@ function History({data, round2dp}) {
                 <div className="transactions-grid-item transactions-grid-item-category" key={nanoid()}
                     style={{backgroundColor:bgColor}}  
                 >{transaction.category ? transaction.category : "Revenue"}</div>
-                <div className="transactions-grid-item transactions-grid-item-sum" key={nanoid()}>£{transaction.sum}</div>
+                <div className="transactions-grid-item transactions-grid-item-sum" key={nanoid()}>{currencySymbol}{transaction.sum}</div>
                 <div className="transactions-grid-item border-right" key={nanoid()}>{transaction.date}</div>
             </div>
             )
@@ -73,15 +73,15 @@ return (
                     </div>
                     <div className="assets-overview-container">
                         <h1 className="assets-text">Total:</h1>
-                        <h1 className="assets-text">£{round2dp(data.balance)}</h1>
+                        <h1 className="assets-text">{currencySymbol}{round2dp(data.balance + investmentsValue)}</h1>
                     </div>
                     <div className="assets-overview-container">
                         <h1 className="assets-text">Savings:</h1>
-                        <h1 className="assets-text">£{round2dp(data.savings)}</h1>
+                        <h1 className="assets-text">{currencySymbol}{round2dp(data.savings)}</h1>
                     </div>
                     <div className="assets-overview-container">
                         <h1 className="assets-text">Investments:</h1>
-                        <h1 className="assets-text">£{round2dp(data.investments)}</h1>
+                        <h1 className="assets-text">{currencySymbol}{round2dp(investmentsValue)}</h1>
                     </div>
                 </div>
             </div>

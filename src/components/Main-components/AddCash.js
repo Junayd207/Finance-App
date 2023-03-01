@@ -7,7 +7,7 @@ import {db,auth} from "../../firebase";
 import CloseIcon from '@mui/icons-material/Close';
 
 
-function AddCash({data, todaysDate, round2dp}) {
+function AddCash({data, todaysDate, round2dp, investmentsValue, currencySymbol}) {
     const [source, setSource] = useState("")
     const [sum, setSum] = useState("")
     const [date, setDate] = useState(todaysDate)
@@ -105,15 +105,15 @@ function AddCash({data, todaysDate, round2dp}) {
                     </div>
                     <div className="assets-overview-container">
                         <h1 className="assets-text">Total:</h1>
-                        <h1 className="assets-text">£{round2dp(data.balance)}</h1>
+                        <h1 className="assets-text">{currencySymbol}{round2dp(data.balance + investmentsValue)}</h1>
                     </div>
                     <div className="assets-overview-container">
                         <h1 className="assets-text">Savings:</h1>
-                        <h1 className="assets-text">£{round2dp(data.savings)}</h1>
+                        <h1 className="assets-text">{currencySymbol}{round2dp(data.savings)}</h1>
                     </div>
                     <div className="assets-overview-container">
                         <h1 className="assets-text">Investments:</h1>
-                        <h1 className="assets-text">£{round2dp(data.investments)}</h1>
+                        <h1 className="assets-text">{currencySymbol}{round2dp(investmentsValue)}</h1>
                     </div>
                 </div>
             </div>

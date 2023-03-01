@@ -9,6 +9,10 @@
     width:100%;
 }
 
+.display-flex{
+    display:flex;
+}
+
 .investments-title{
     margin:0 auto;
     padding:20px;
@@ -23,37 +27,207 @@
     align-items: center;
 }
 
-.assets-overview{
+.current-prices-container{
+    margin:20px;
+    background:var(--blue-shade-7);
+    display:flex;
+    flex-direction:column;
+    width:700px;
+    border-radius: 10px;
+    align-self: flex-start
+}
+
+.current-prices-title-container{
+    background:var(--blue-shade-1);
+    border-radius: 10px 10px 0 0;
+    display:flex;
+    padding: 10px 20px 10px 0;
+}
+
+.current-price-title{
+    padding:0 20px 0 20px;  /* padding here determines box width*/
+    margin:0;
+}
+
+.current-price-values-container{
+    display:flex;
+    justify-content:space-evenly;
+    padding-right:10px;
+}
+
+.current-prices-overview-container{
+    display:flex;
+}
+
+.current-price-text{
+    font-size:22px;
+    padding-left: 10px
+}
+
+.asset-chart{
+    margin:20px;
+}
+
+.plot-chart{
+    background-color: blue;
+}
+
+
+
+
+
+
+.balance-overview{
     background:var(--blue-shade-7);
     margin:20px;
     margin-left:0;
     border-radius: 10px;
 }
 
-.assets-overview-title-container{
+.balance-overview-title-container{
     display:flex;
     align-items:center;
     padding: 10px 20px 10px 0;
     border-radius: 10px 10px 0 0;
     background-color: var(--blue-shade-1);
-    margin-bottom:20px;
 }
   
-.assets-overview-title{
-    padding:0 100px 0 20px;  /* padding here determines box width*/
+.balance-overview-title{
+    width:200px;
     margin:0;
+    text-align:left;
+    padding-left:20px;
 }
 
-.assets-overview-container{
+.balance-overview-container{
     margin: 0 20px;
     display:flex;
     justify-content: space-between;
 }
 
-.assets-text{
-    margin:10px 0;
+.balance-text{
+    margin:8px 0;
     font-size:16px;
 }
+
+.investments-overview{
+    background:var(--blue-shade-7);
+    margin:20px;
+    margin-left:0;
+    border-radius: 10px;
+}
+
+.investments-overview-title-container{
+    display:flex;
+    align-items:center;
+    padding: 10px 20px 10px 0;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--blue-shade-1);
+}
+  
+.investments-overview-title{
+    width:200px;
+    margin:0;
+    text-align:left;
+    padding-left:20px;
+}
+
+.investments-overview-container{
+    margin: 0 20px;
+    display:flex;
+    justify-content: space-between;
+}
+
+.investments-text{
+    margin:8px 0;
+    font-size:16px;
+}
+
+
+
+
+.make-investment-container{
+    background:var(--blue-shade-7);
+    margin:20px;
+    margin-left:0;
+    border-radius: 10px;
+}
+
+.make-investment-title-container{
+    display:flex;
+    background: var(--blue-shade-1);
+    margin:0;
+    padding: 10px 20px 10px 0;
+    border-radius: 10px 10px 0 0;
+}
+
+.make-investment-title{
+    width:200px;
+    margin:0;
+    text-align:left;
+    padding-left:20px;
+}
+
+.transaction-type-container{
+    display:flex;
+    justify-content:space-between;
+    margin: 0 20px;
+}
+
+.transaction-text{
+    font-size:16px;
+}
+
+.transaction-choice{
+    margin:8px 0;
+    border:none;
+    color:white;
+    background:var(--blue-shade-8);
+    border-radius:5px;
+    padding: 5px 10px;
+    width:30%;
+
+}
+
+.investment-amount-input{
+    display:flex;
+    justify-content:space-between;
+    margin: 0 20px;
+}
+
+.investment-amount-input-field{
+    border-radius:2px;
+    border:none;
+    width:30%;
+    font-family: 'Poppins', sans-serif; 
+    margin:8px 0;
+}
+
+.submit-investment{
+    display:flex;
+    justify-content: center;
+    padding-bottom:10px;
+}
+
+.submit-investment-button{
+    border:none;
+    font-family: 'Poppins', sans-serif;    
+    background: var(--blue-shade-1);
+    color:white;
+    padding: 5px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.investment-confirmation-text{
+    text-align:center;
+    font-weight:bold;
+    overflow:hidden;
+}
+
+
+
+
 .error-box{
     background:#ffdce0;
     color:#922c2b;

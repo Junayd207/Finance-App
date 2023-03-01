@@ -165,6 +165,10 @@
     text-align:left;
 }
 
+.transactions-grid-item-purpose::first-letter {
+    text-transform:capitalize;
+}
+
 .transactions-grid-item-category{
     background-color: rgb(44, 164, 44);
 }
