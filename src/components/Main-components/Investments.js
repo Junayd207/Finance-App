@@ -7,88 +7,190 @@ import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
 import Plot from 'react-plotly.js';
 import moment from 'moment';
+import {updateDoc, doc, increment} from "firebase/firestore";
+import {db,auth} from "../../firebase";
+import CloseIcon from '@mui/icons-material/Close';
 
-function Investments({data, coins, round2dp, investmentsValue, currencySymbol, BTCDailyData, ETHDailyData, BNBDailyData}) {
+
+function Investments({todaysDate ,data, coins, round2dp, investmentsValue, currencySymbol, BTCDailyData, ETHDailyData, BNBDailyData}) {
     const [amount, setAmount] = useState(0)
-    const [currency, setCurrency] = useState("")
-    const [buySell, setBuySell] = useState("")
-    const [Xvalues, setXvalues] = useState([])
+    const [currency, setCurrency] = useState("BTC")
+    const [buySell, setBuySell] = useState("Buy")
     const [Yvalues, setYvalues] = useState([])
+    const [asset, setAsset] = useState("BTC")
+    const [AssetXValues,setAssetXValues] = useState([])
+    const [BTCYValues,setBTCYValues] = useState([])
+    const [ETHYValues,setETHYValues] = useState([])
+    const [BNBYValues,setBNBYValues] = useState([])
+    const [insufficientFunds,setInsufficientFunds] = useState(false)
+    const [insufficientAssets,setInsufficientAssets] = useState(false)
+    const [amountEntered,setAmountEntered] = useState(false)
+
 
     useEffect(() => {
         const doit = async () => {
             if(BTCDailyData && BTCDailyData.length > 1){
                 for(let i = 0; i < BTCDailyData.length-1;i++){
                     var t = new Date(BTCDailyData[i][0]);
-                    var formatted = moment(t).format("MMMs Do")
-                    Xvalues.push(formatted)
-                    Yvalues.push(BTCDailyData[i][1])
+                    var formatted = moment(t).format("MMM Do")
+                    AssetXValues.push(formatted)
+                    BTCYValues.push(BTCDailyData[i][1])
                 }
             }
         }
         doit()
+        setYvalues(BTCYValues)
     },[BTCDailyData])
 
+    useEffect(() => {
+        const doit = async () => {
+            if(ETHDailyData && ETHDailyData.length > 1){
+                for(let i = 0; i < ETHDailyData.length-1;i++){
+                    var u = new Date(ETHDailyData[i][0]);
+                    ETHYValues.push(ETHDailyData[i][1])
+                }
+            }
+        }
+        doit()
+    },[ETHDailyData])
 
+    useEffect(() => {
+        const doit = async () => {
+            if(BNBDailyData && BNBDailyData.length > 1){
+                for(let i = 0; i < BNBDailyData.length-1;i++){
+                    var v = new Date(BNBDailyData[i][0]);
+                    BNBYValues.push(BNBDailyData[i][1])
+                }
+            }
+        }
+        doit()
+    },[BNBDailyData])
 
-
-    /*console.log(Xvalues)
-    console.log(Yvalues)
-    console.log(BTCDailyData)*/
-
-    const errorBox = <div></div>
-
-    function addInvestment(){
-        console.log("investment made")
+    
+    function changeAsset(event){
+        setAsset(event)
+        if(event === "BTC"){
+            setYvalues(BTCYValues)
+        }
+        else if(event === "ETH"){
+            setYvalues(ETHYValues)
+        }
+        else if(event === "BNB"){
+            setYvalues(BNBYValues)
+        }
     }
 
     let price = 0
     let sellableAmount = 0
-    if(currency === "BTC"){
+    if(currency === "BTC" && coins[0]){
         price = round2dp(amount*coins[0].current_price)
-        sellableAmount = data.BTC
+        sellableAmount = round2dp(data.BTC)
     }
     else if(currency === "ETH"){
         price = round2dp(amount*coins[1].current_price)
-        sellableAmount = data.ETH
+        sellableAmount = round2dp(data.BTC)
     }
     else if(currency === "BNB"){
         price = round2dp(amount*coins[3].current_price)
-        sellableAmount = data.BNB
+        sellableAmount = round2dp(data.BTC)
     }
-
-
-
-    const investmentMessage = (currency.length && buySell.length && amount > 0) ? 
-    <div>
-        <p className = "investment-confirmation-text" 
-            style={((buySell === "Buy" && price <= data.savings) || (buySell === "Sell" && amount <= sellableAmount)) ? {color:"#ffffff"} : {color:"#922c2b"}}>
-            {buySell} {amount} {currency} for {currencySymbol}{price}
-        </p>
-    </div> : null
 
     const assetChart = 
     <div className = "asset-chart">
         <Plot
             data={[
                 {
-                    x: Xvalues,
+                    x: AssetXValues,
                     y: Yvalues,
                     type:"scatter",
                     mode: "lines",
                     marker: {color:"#013A63"},
                 },
             ]}
-            layout={{width:700,height:400,title:"a chart",paper_bgcolor:"#fff",plot_bgcolor:"#fff"}}
+            layout={{width:700,height:400,title:asset + " Daily Chart",paper_bgcolor:"#fff",plot_bgcolor:"#fff",xaxis:{title:"Date"},yaxis:{title:[asset]+" (" + currencySymbol+")"}}}
+            
         />
+        <div className="asset-choice">
+                <select id="asset" name="asset" className="asset-choice-input" value={asset}
+                    onChange={(event) => {changeAsset(event.target.value)}}>
+                    <option value="" disabled hidden></option>
+                    <option value="BTC">BTC</option>
+                    <option value="ETH">ETH</option>
+                    <option value="BNB">BNB</option>
+                </select>
+        </div>
     </div>
+
+    const investmentMessage = (currency.length && buySell.length && amount > 0) ? 
+        <div>
+            <p className = "investment-confirmation-text" 
+                style={(buySell === "Buy") ? {color:"#42f55d"} : {color:"#f25d3f"}}>
+                {buySell} {amount} {currency} for {currencySymbol}{price}
+            </p>
+        </div> : null
+    
+    console.log(insufficientAssets)
+    console.log(insufficientFunds)
+
+
+
+    const errorBox = (insufficientAssets || insufficientFunds || amountEntered) ?
+    <div className="error-box">
+        <div className="display-flex-between">
+            <p className="error-title">Error</p>
+            <CloseIcon onClick={(e) => resetValues()} sx={{cursor: "pointer"}}/>
+        </div>
+        {amountEntered && <p className="error-text">Enter A Valid Amount</p>}
+        {insufficientAssets && <p className="error-text">Insufficient Assets</p>}
+        {insufficientFunds && <p className="error-text">Insufficient Funds</p>}
+    </div> : null
+
+    function resetValues(){
+        setInsufficientAssets(false)
+        setInsufficientFunds(false)
+        setAmountEntered(false)
+    }
+    console.log(sellableAmount)
+    console.log(amount)
+    const addInvestment = async() => {
+        if(amount === 0){
+            setAmountEntered(true)
+        }
+        else if(buySell === "Buy" && price > data.savings){
+            setInsufficientFunds(true)
+        }
+        else if(buySell === "Sell" && amount > sellableAmount){
+            setInsufficientAssets(true)
+        }
+        else{
+            if(buySell === "Buy")
+            {
+                await updateDoc(doc(db,"users",auth.currentUser.uid), {
+                    [asset]: increment(round2dp(amount)),
+                    balance: increment(round2dp(-price)),
+                    savings: increment(round2dp(-price)),
+                    transactions: [{type:"Investment",asset:currency,category:buySell, sum:round2dp(price), date:todaysDate},...(data.transactions)],
+                })
+            }
+            else{
+                await updateDoc(doc(db,"users",auth.currentUser.uid), {
+                    [asset]: increment(round2dp(-amount)),
+                    balance: increment(round2dp(price)),
+                    savings: increment(round2dp(price)),
+                    transactions: [{type:"Investment",asset:currency,category:buySell, sum:round2dp(price), date:todaysDate},...(data.transactions)],
+                })
+            }
+            resetValues()
+            setAmount(0)
+        }
+    }
 
     return (
         <main className="investments">
             <div className="flex-direction-column">
                 <h1 className="investments-title">Investments</h1>
                 <div className="display-flex">
-                    <div>
+                    <div style={{height:"690px"}}>
                         <div className="current-prices-container">
                             <div className="current-prices-title-container">
                                 <h3 className="current-price-title">Current Prices</h3>
@@ -136,15 +238,15 @@ function Investments({data, coins, round2dp, investmentsValue, currencySymbol, B
                                 <ShowChartIcon/>
                             </div>
                             <div className="investments-overview-container">
-                                <h1 className="investments-text">BTC: {data.BTC}</h1>
+                                <h1 className="investments-text">BTC: {round2dp(data.BTC)}</h1>
                                 <h1 className="investments-text">{currencySymbol}{round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0))}</h1>
                             </div>
                             <div className="investments-overview-container">
-                                <h1 className="investments-text">ETH: {data.ETH}</h1>
+                                <h1 className="investments-text">ETH: {round2dp(data.ETH)}</h1>
                                 <h1 className="investments-text">{currencySymbol}{round2dp(data.ETH * (coins[1] ? coins[1].current_price : 0))}</h1>
                             </div>
                             <div className="investments-overview-container">
-                                <h1 className="investments-text">BNB: {data.BNB}</h1>
+                                <h1 className="investments-text">BNB: {round2dp(data.BNB)}</h1>
                                 <h1 className="investments-text">{currencySymbol}{round2dp(data.BNB * (coins[3] ? coins[3].current_price : 0))}</h1>
                             </div>
                         </div>

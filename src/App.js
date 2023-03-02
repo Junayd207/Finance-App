@@ -130,7 +130,7 @@ function App() {
         <Route path="/investments" element={
             <div className="investments">
                 <Sidebar/>
-                <Investments data={data} coins={coins} round2dp={round2dp} investmentsValue={investmentsValue} currencySymbol={currencySymbol}
+                <Investments todaysDate={todaysDate} data={data} coins={coins} round2dp={round2dp} investmentsValue={investmentsValue} currencySymbol={currencySymbol}
                             BTCDailyData = {BTCDailyData.prices} ETHDailyData = {ETHDailyData.prices} BNBDailyData = {BNBDailyData.prices}/>
             </div>
         }/>

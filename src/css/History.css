@@ -6,7 +6,6 @@
 .flex-direction-column{
     display:flex;
     flex-direction:column;
-    width:100%;
 }
 
 .history-title{
@@ -40,7 +39,9 @@
     margin:0;
     padding: 10px 480px 10px 20px;
     border-radius:10px 10px 0 0;
-    background-color:var(--blue-shade-1)
+    background-color:var(--blue-shade-1);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .recent-transactions-grid-titles-container{
@@ -94,21 +95,29 @@
     background-color: rgb(44, 164, 44);
 }
 
-.assets-overview{
-    background:var(--blue-shade-7);
-    margin:0;
-    margin-left:20px;
-    border-radius: 10px;
-    height:240px;
+.transaction-elements{
+    height:512px;
+    overflow:hidden;
+    overflow-y:scroll;
 }
 
-.assets-overview-title-container{
+.transaction-elements::-webkit-scrollbar {
+    display: none;
+}
+
+.assets-overview{
+    background:var(--blue-shade-7);
+    margin:0 0 20px 20px;
+    border-radius: 10px;
+}
+
+.assets-overview .assets-overview-title-container{
     display:flex;
     align-items:center;
     padding: 10px 20px 10px 0;
     border-radius: 10px 10px 0 0;
     background-color: var(--blue-shade-1);
-    margin-bottom:20px;
+    margin:0;
 }
   
 .assets-overview-title{
@@ -125,4 +134,48 @@
 .assets-text{
     margin:10px 0;
     font-size:16px;
+}
+
+.filter-transactions-container{
+    background:var(--blue-shade-7);
+    margin-left:20px;
+    border-radius:10px;
+    padding-bottom:10px;
+}
+
+.filter-transactions-title-container{
+    display:flex;
+    align-items:center;
+    padding: 10px 20px 10px 0;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--blue-shade-1);
+    margin:0;
+    justify-content: space-between;
+}
+
+.filter-transactions-title{
+    padding-left: 20px;  /* padding here determines box width*/
+    margin:0;
+}
+
+.filter-type{
+    display:flex;
+    justify-content: space-between;
+    padding:0 20px;
+    margin-top:10px;
+}
+
+.filter-type-title{
+    margin:0;
+}
+
+.filter-category{
+    display:flex;
+    justify-content: space-between;
+    padding:0 20px;
+    margin-top:10px;
+}
+
+.filter-category-title{
+    margin:0;
 }
