@@ -44,7 +44,7 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue,currencySymbol}
                 <div className="transactions-grid-item" key={nanoid()}
                     style={{backgroundColor:typeColor}}
                 >{transaction.type}</div>
-                <div className="transactions-grid-item transactions-grid-item-purpose" key={nanoid()}>{transaction.purchase ? transaction.purchase : transaction.source}</div>
+                <div className="transactions-grid-item transactions-grid-item-purpose" key={nanoid()}>{transaction.purchase ? transaction.purchase : (transaction.source ? transaction.source : transaction.asset)}</div>
                 <div className="transactions-grid-item transactions-grid-item-category" key={nanoid()}
                     style={{backgroundColor:bgColor}}  
                 >{transaction.category ? transaction.category : "Revenue"}</div>
@@ -96,8 +96,12 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue,currencySymbol}
             setCategoryShort(true)
         }
         if(purchase.length > 0 && sum.length > 0 && date.length > 0 && category.length > 0){
+            let sortedByDate = [{type:"Expenditure", purchase:purchase, sum:round2dp(sum), date:date, category:category},...(data.transactions)]
+            sortedByDate.sort(function(a,b){
+                return new Date(b.date) - new Date(a.date)
+            })
             await updateDoc(doc(db,"users",auth.currentUser.uid), {
-                transactions: [{type:"Expenditure", purchase:purchase, sum:round2dp(sum), date:date, category:category},...(data.transactions)],
+                transactions: sortedByDate,
                 balance: increment(-round2dp(sum)),
                 savings: increment(-round2dp(sum)),
                 shopping: (category === "Shopping" ? increment(round2dp(sum)): increment(0)),

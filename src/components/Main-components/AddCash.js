@@ -28,8 +28,12 @@ function AddCash({data, todaysDate, round2dp, investmentsValue, currencySymbol})
             setDateShort(true)
         }
         if(source.length > 0 && sum.length > 0 && date.length > 0){
+            let sortedByDate = [{type:"Add-Cash",source:source, sum:round2dp(sum), date:date, category:"Revenue"},...(data.transactions)]
+            sortedByDate.sort(function(a,b){
+                return new Date(b.date) - new Date(a.date)
+            })
             await updateDoc(doc(db,"users",auth.currentUser.uid), {
-                transactions: [{type:"Add-Cash",source:source, sum:round2dp(sum), date:date},...(data.transactions)],
+                transactions: sortedByDate,
                 balance: increment(round2dp(sum)),
                 savings: increment(round2dp(sum))
             })

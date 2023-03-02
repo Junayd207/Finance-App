@@ -14,8 +14,9 @@ const [category, setCategory] = useState("All")
     var transactionElements = []
     const doit = async() => {
         const transactionsArray = (data.transactions).slice(0, 50)
-        console.log(transactionsArray)
-        transactionElements = transactionsArray.map(transaction => {
+        let result = transactionsArray.filter(transaction => category === "All" ? transaction : (transaction.category === category))
+        result = result.filter(transaction => type === "All" ? transaction : (transaction.type === type))
+        transactionElements = result.map(transaction => {
             let bgColor = ""
             if(transaction.category === "Shopping"){
                 bgColor="#014F86"

@@ -163,13 +163,17 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
             setInsufficientAssets(true)
         }
         else{
+            let sortedByDate = [{type:"Investment",asset:currency,category:buySell, sum:round2dp(price), date:todaysDate},...(data.transactions)]
+            sortedByDate.sort(function(a,b){
+                return new Date(b.date) - new Date(a.date)
+            })
             if(buySell === "Buy")
             {
                 await updateDoc(doc(db,"users",auth.currentUser.uid), {
                     [asset]: increment(round2dp(amount)),
                     balance: increment(round2dp(-price)),
                     savings: increment(round2dp(-price)),
-                    transactions: [{type:"Investment",asset:currency,category:buySell, sum:round2dp(price), date:todaysDate},...(data.transactions)],
+                    transactions: sortedByDate,
                 })
             }
             else{
@@ -177,7 +181,7 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
                     [asset]: increment(round2dp(-amount)),
                     balance: increment(round2dp(price)),
                     savings: increment(round2dp(price)),
-                    transactions: [{type:"Investment",asset:currency,category:buySell, sum:round2dp(price), date:todaysDate},...(data.transactions)],
+                    transactions: sortedByDate,
                 })
             }
             resetValues()
