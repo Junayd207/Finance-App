@@ -1,9 +1,12 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect} from 'react';
+import {Routes, Route} from "react-router-dom";
+import {db, auth} from "./firebase";
+import {doc, onSnapshot, query} from "firebase/firestore";
 import './App.css';
-import Login from "./components/Login"
-import Signup from "./components/Signup"
-import Sidebar from "./components/Main-components/Sidebar"
-import Dashboard from "./components/Main-components/Dashboard"
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Sidebar from "./components/Main-components/Sidebar";
+import Dashboard from "./components/Main-components/Dashboard";
 import AddCash from './components/Main-components/AddCash';
 import Investments from './components/Main-components/Investments';
 import Forecast from './components/Main-components/Forecast';
@@ -12,23 +15,18 @@ import Profile from './components/Main-components/Profile';
 import Settings from './components/Main-components/Settings';
 import axios from "axios";
 
-
-import {Routes, Route} from "react-router-dom"
-import {db, auth} from "./firebase"
-import {doc, onSnapshot, query} from "firebase/firestore";
-
 function App() { 
+/*---------------------- Initialise state variables ----------------------*/
     const [coins, setCoins] = useState([]);
     const [BTCDailyData, setBTCDailyData] = useState([]);
     const [ETHDailyData, setETHDailyData] = useState([]);
     const [BNBDailyData, setBNBDailyData] = useState([]);
     const [currencySymbol, setCurrencySymbol] = useState("")
-    
     const [data, setData] = useState({})
 
+/*--------------- Calculate Todays Date In YY-MM-DD Format ---------------*/
     const d = new Date()
     let todaysDate = ""
-    
     if((d.getMonth()+1) < 10){
         if(d.getDate() < 10)
             todaysDate = d.getFullYear() + "-0" + (d.getMonth()+1) + "-0" + d.getDate()
@@ -42,10 +40,12 @@ function App() {
             todaysDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate()
     }
     
+/*-------------------- Function To Round Number To 2DP --------------------*/
     function round2dp(num){
         return Math.round(num*100) / 100
     }
 
+/*------------------ useEffect Hook To Collect User Data ------------------*/
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(() => {
             unsub()
@@ -58,6 +58,7 @@ function App() {
         })
     },[auth.currentUser])
 
+/*useEffect Hook To Collect API Price Data With Dependancy To Refresh If Currency(£$€) Changes*/
     useEffect(() => {
         const getData = async () => {
             try {
@@ -94,23 +95,23 @@ function App() {
             }
         };
         if(data.currency){
-            getData()
             if(data.currency === "GBP")
                 setCurrencySymbol("£")
             else if(data.currency === "USD")
                 setCurrencySymbol("$")
             else if(data.currency === "EUR")
                 setCurrencySymbol("€")
-        }        
+            getData()
+        }  
     }, [data.currency]);
 
-    console.log(`https://api.coingecko.com/api/v3/coins/binancecoin/market_chart?vs_currency=${data.currency}&days=30&interval=daily`)
-
+/*--------------------- Calculate Total Value Of Investments ---------------------*/
     let investmentsValue = (round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0) + 
-    data.ETH * (coins[1] ? coins[1].current_price : 0) +
-    data.BNB * (coins[3] ? coins[3].current_price : 0)))
+                data.ETH * (coins[1] ? coins[1].current_price : 0) +
+                data.BNB * (coins[3] ? coins[3].current_price : 0)))
 
-  return (
+/*---------------- Depending On URL, Render Correct Website Routes ----------------*/
+return (
     <div>
       <Routes>
         <Route path="/" element={<Login/>}/>

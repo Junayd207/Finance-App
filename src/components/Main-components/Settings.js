@@ -1,6 +1,5 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react';
 import '../../css/Settings.css';
-import "../../App"
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import {updateDoc, doc} from "firebase/firestore";
 import {db,auth} from "../../firebase";

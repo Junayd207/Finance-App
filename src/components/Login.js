@@ -1,27 +1,20 @@
 import React, {useState} from "react";
+import {auth} from "../firebase"
+import {signInWithEmailAndPassword} from "firebase/auth";
 import '../css/Login.css';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PortraitOutlinedIcon from '@mui/icons-material/PortraitOutlined';
 import CloseIcon from '@mui/icons-material/Close';
-import {auth} from "../firebase"
-import {
-    signInWithEmailAndPassword
-  } from "firebase/auth";
 
 function Login() {
+/*---------------------- Initialise State Variables ----------------------*/    
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
     const [invalidEmail, setInvalidEmail] = useState(false)
     const [invalidUser, setInvalidUser] = useState(false)
     const [wrongPassword, setWrongPassword] = useState(false)
 
-    function resetValues() {
-        setInvalidEmail(false)
-        setInvalidUser(false)
-        setWrongPassword(false)
-    }
-
+/*---------------------- Signin Function ----------------------*/    
     const signIn = async () =>{
         resetValues()
         if(!email.match(/([a-zA-Z0-9_.+-]+@[a-zA-Z0-9_.+-]+\.[a-zA-Z0-9_.+-]+)/)){
@@ -48,6 +41,14 @@ function Login() {
         }
     }
 
+/*---------------------- Reset Error Box Values For Conditional Rendering ----------------------*/    
+    function resetValues() {
+        setInvalidEmail(false)
+        setInvalidUser(false)
+        setWrongPassword(false)
+    }
+
+/*---------------------- Error Box Element For Incorrect User Inputs ----------------------*/    
     const errorBox = (invalidUser || wrongPassword || invalidEmail) ?
         <div className="error-box">
             <div className="display-flex-between">
@@ -59,36 +60,36 @@ function Login() {
             {wrongPassword && <p className="error-text">Password Incorrect, Please Try Again</p>}
         </div> : null
 
-
-return (
-    <main className="login">
-        <h1 className="login-title">My Finance Pal</h1>
-        {errorBox}
-        <div className="username-input"> 
-            <PortraitOutlinedIcon sx={{ fontSize: 30, color:"#000000", padding:2}}/>
-            <div className="display-flex-column">
-                <h1 className="username-text">Email</h1>
-                <input 
-                    className="username-input-field"
-                    onChange={(event) => {setEmail(event.target.value)}}
-                />
+/*---------------------- Return (Render Elements) ----------------------*/    
+    return (
+        <main className="login">
+            <h1 className="login-title">My Finance Pal</h1>
+            {errorBox}
+            <div className="username-input"> 
+                <PortraitOutlinedIcon sx={{ fontSize: 30, color:"#000000", padding:2}}/>
+                <div className="display-flex-column">
+                    <h1 className="username-text">Email</h1>
+                    <input 
+                        className="username-input-field"
+                        onChange={(event) => {setEmail(event.target.value)}}
+                    />
+                </div>
             </div>
-        </div>
-        <div className="password-input">
-            <LockOutlinedIcon sx={{ fontSize: 30, color:"#000000", padding:2}}/>
-            <div className="display-flex-column">
-                <h1 className="password-text">Password</h1>
-                <input 
-                    className="password-input-field" 
-                    type="password"
-                    onChange={(event) => {setPassword(event.target.value)}}
-                />
-            </div> 
-        </div>
-        <button className="login-button" onClick={signIn}>Login</button>
-        <p className="no-account-text">Don’t Have An Account? <a className="signup-link" href="/signup">Register</a></p>
-    </main>
-  );
+            <div className="password-input">
+                <LockOutlinedIcon sx={{ fontSize: 30, color:"#000000", padding:2}}/>
+                <div className="display-flex-column">
+                    <h1 className="password-text">Password</h1>
+                    <input 
+                        className="password-input-field" 
+                        type="password"
+                        onChange={(event) => {setPassword(event.target.value)}}
+                    />
+                </div> 
+            </div>
+            <button className="login-button" onClick={signIn}>Login</button>
+            <p className="no-account-text">Don’t Have An Account? <a className="signup-link" href="/signup">Register</a></p>
+        </main>
+    );
 }
 
 export default Login;

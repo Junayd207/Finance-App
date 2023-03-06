@@ -1,6 +1,5 @@
-import React from 'react'
+import React from 'react';
 import '../../css/Forecast.css';
-import "../../App"
 
 function Forecast() {
 

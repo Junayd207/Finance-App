@@ -1,12 +1,12 @@
-import React from 'react'
-import '../../css/SidebarOption.css'
+import React from 'react';
+import '../../css/SidebarOption.css';
 
 function SidebarOption({text, Icon, link}) {
   let lastURL ="/" + window.location.href.substring(window.location.href.lastIndexOf("/")+1) 
 
   return (
-    <div className="sidebarOption" onClick={(e) => {e.preventDefault()
-      window.location.href=link}}
+    <div className="sidebarOption" onClick={(e) => {e.preventDefault() 
+window.location.href=link}}
       style={lastURL===link ? {backgroundColor: "#89C2D9", color:"white"}:{}}
     >
         <Icon/>

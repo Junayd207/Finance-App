@@ -1,20 +1,34 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react';
+import {db,auth} from "../../firebase";
+import { doc, updateDoc, increment } from "firebase/firestore"; 
+import {nanoid} from "nanoid";
 import '../../css/Dashboard.css';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import HomeIcon from '@mui/icons-material/Home';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
-import {db,auth} from "../../firebase";
-import { doc, updateDoc, increment } from "firebase/firestore"; 
 import CloseIcon from '@mui/icons-material/Close';
-import {nanoid} from "nanoid"
+
 
 
 function Dashboard({data, todaysDate, round2dp, investmentsValue,currencySymbol}) {
+/*---------------------- Initialise State Variables ----------------------*/
+    const [purchase, setPurchase] = useState("")
+    const [sum, setSum] = useState("")
+    const [date, setDate] = useState(todaysDate)
+    const [category, setCategory] = useState("")
+    const [purchaseShort,setPurchaseShort] = useState(false)
+    const [sumShort,setSumShort] = useState(false)
+    const [dateShort,setDateShort] = useState(false)
+    const [categoryShort,setCategoryShort] = useState(false)
+
+/*------------ Get Transaction Data And Render It Into A Table (Upto 10) ------------*/
     var transactionElements = []
-    const doit = async() => {
-        const transactionsArray = (data.transactions).slice(0, 9)
+    let transactionsArray =[]
+    const getTransactionsTable = async() => {
+        if(data.transactions)
+            transactionsArray = (data.transactions).slice(0, 9)
         transactionElements = transactionsArray.map(transaction => {
             let bgColor = ""
             if(transaction.category === "Shopping"){
@@ -54,33 +68,9 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue,currencySymbol}
             )
         })
     }
-    doit()
+    getTransactionsTable()
 
-    const [purchase, setPurchase] = useState("")
-    const [sum, setSum] = useState("")
-    const [date, setDate] = useState(todaysDate)
-    const [category, setCategory] = useState("")
-
-    console.log(date)
-    function resetValues() {
-        setPurchase("")
-        setSum("")
-        setDate(todaysDate)
-        setCategory("")
-    } 
-
-    const [purchaseShort,setPurchaseShort] = useState(false)
-    const [sumShort,setSumShort] = useState(false)
-    const [dateShort,setDateShort] = useState(false)
-    const [categoryShort,setCategoryShort] = useState(false)
-
-    function resetErrorValues(){
-        setPurchaseShort(false)
-        setSumShort(false)
-        setDateShort(false)
-        setCategoryShort(false)
-    }
-
+/*------------ Add Transaction To Database Function ------------*/
     const addExpenditure = async() => {
         resetErrorValues()
         if(purchase.length < 1){
@@ -115,6 +105,23 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue,currencySymbol}
         }
     }
 
+/*---------- Reset User Input Values After Successful Transaction Added ----------*/
+    function resetValues() {
+        setPurchase("")
+        setSum("")
+        setDate(todaysDate)
+        setCategory("")
+    } 
+
+/*--------------- Reset Error Box Values For Conditional Rendering ---------------*/
+    function resetErrorValues(){
+        setPurchaseShort(false)
+        setSumShort(false)
+        setDateShort(false)
+        setCategoryShort(false)
+    }
+
+/*--------------- Error Box Element For Incorrect User Inputs ---------------*/
     const errorBox = (purchaseShort || sumShort || dateShort || categoryShort) ?
         <div className="error-box">
             <div className="display-flex-between">
@@ -127,132 +134,145 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue,currencySymbol}
             {categoryShort && <p className="error-text">Please Select A Category</p>}
         </div> : null
 
-  return (
-    <section className="dashboard">
-        <div className="flex-direction-column">
-            <h1 className="dashboard-title">Dashboard</h1>
-            <div className="account-balances">
-                <div className="assets-value">
-                    <div className="assets-value-title-container">
-                        <h3 className="assets-value-title">Balances</h3>
-                        <LocalAtmIcon/>
-                    </div>
-                    <div className="assets-values-container">
-                        <p className="assets-text">Total:</p>
-                        <p className="assets-text">{currencySymbol}{round2dp(data.balance + investmentsValue)}</p>
-                    </div>
-                    <div className="assets-values-container">
-                        <p className="assets-text">Savings:</p>
-                        <p className="assets-text">{currencySymbol}{round2dp(data.savings)}</p>
-                    </div>
-                    <div className="assets-values-container">
-                        <p className="assets-text">Investments:</p>
-                        <p className="assets-text">{currencySymbol}{round2dp(investmentsValue)}</p>
-                    </div>
+/*--------------- Top Row Account Balances ---------------*/
+    const accountBalances = 
+        <div className="account-balances">
+            <div className="assets-value">
+                <div className="assets-value-title-container">
+                    <h3 className="assets-value-title">Balances</h3>
+                    <LocalAtmIcon/>
                 </div>
-                <div className="spend" style={{backgroundColor:"#014F86"}}>
-                    <div className="spend-title-container">
-                        <h3 className="spend-title">Shopping</h3>
-                        <ShoppingCartIcon/>
-                    </div>
-                    <h1 className="spend-total">{currencySymbol}{round2dp(data.shopping)}</h1>
+                <div className="assets-values-container">
+                    <p className="assets-text">Total:</p>
+                    <p className="assets-text">{currencySymbol}{round2dp(data.balance + investmentsValue)}</p>
                 </div>
-                <div className="spend" style={{backgroundColor:"#2A6F97"}}>
-                    <div className="spend-title-container">
-                        <h3 className="spend-title" style={{minWidth:"120px"}}>Food & Drinks</h3>
-                        <RestaurantIcon/>
-                    </div>
-                    <h1 className="spend-total">{currencySymbol}{round2dp(data.fooddrinks)}</h1>
+                <div className="assets-values-container">
+                    <p className="assets-text">Savings:</p>
+                    <p className="assets-text">{currencySymbol}{round2dp(data.savings)}</p>
                 </div>
-                <div className="spend" style={{backgroundColor:"#2C7DA0"}}>
-                    <div className="spend-title-container">
-                        <h3 className="spend-title" style={{minWidth:"120px"}}>Bills & Utilities</h3>
-                        <HomeIcon/>
-                    </div>
-                    <h1 className="spend-total">{currencySymbol}{round2dp(data.billsutilities)}</h1>
-                </div>
-                <div className="spend" style={{backgroundColor:"#468FAF"}}>
-                    <div className="spend-title-container">
-                        <h3 className="spend-title">Others</h3>
-                        <AllInclusiveIcon/>
-                    </div>
-                    <h1 className="spend-total">{currencySymbol}{round2dp(data.others)}</h1>
+                <div className="assets-values-container">
+                    <p className="assets-text">Investments:</p>
+                    <p className="assets-text">{currencySymbol}{round2dp(investmentsValue)}</p>
                 </div>
             </div>
-            <div className="flex-direction-row">
-                <div className="recent-transactions-container">
-                    <h3 className="recent-transactions-title">Recent Transactions</h3>
-                    <div className="recent-transactions-grid-titles-container">
-                        <div className="recent-transactions-grid-title">Type</div>
-                        <div className="recent-transactions-grid-title">Purpose</div>
-                        <div className="recent-transactions-grid-title">Category</div>
-                        <div className="recent-transactions-grid-title">Sum</div>
-                        <div className="recent-transactions-grid-title border-right">Date</div>
-                    </div>
-                    {transactionElements}
+            <div className="spend" style={{backgroundColor:"#014F86"}}>
+                <div className="spend-title-container">
+                    <h3 className="spend-title">Shopping</h3>
+                    <ShoppingCartIcon/>
                 </div>
-                <div className="expenditures-container">
-                        <h3 className="addCash-expenditure-title">Add Expenditure</h3>
-                        {errorBox}
-                        <div className="purchase-input"> 
-                            <h1 className="purchase-input-text">Purchase:</h1>
-                            <input 
-                                className="purchase-input-field"
-                                onChange={(event) => {setPurchase(event.target.value)}}
-                                value={purchase}
-                            />
-                        </div>
-                        <div className="expenditure-sum-input"> 
-                            <h1 className="expenditure-sum-input-text">Sum:</h1>
-                            <input 
-                                className="expenditure-sum-input-field"
-                                type="number"
-                                onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
-                                onChange={(event) => {setSum(event.target.value)}}
-                                value={sum}
-                            />
-                        </div>
-                        <div className="expenditure-date-input"> 
-                            <input 
-                                type="date"
-                                className="expenditure-date-input-field"
-                                onChange={(event) => {setDate(event.target.value)}}
-                                defaultValue={todaysDate}
-                            />
-                        </div>
-                        <div className="expenditure-category">
-                            <h1 className="category-input-text">Category:</h1>
-                            <div className="category-input-field">
-                                <input type="radio" value="Shopping" name="category"
-                                    checked={category === "Shopping"}
-                                    onChange={(event) => {setCategory(event.target.value)}}
-                                />
-                                <ShoppingCartIcon/>
-                                <input type="radio" value="Food&Drinks" name="category"
-                                    checked={category === "Food&Drinks"}
-                                    onChange={(event) => {setCategory(event.target.value)}}
-                                />
-                                <RestaurantIcon/>
-                                <input type="radio" value="Bills&Utilities" name="category"
-                                    checked={category === "Bills&Utilities"}
-                                    onChange={(event) => {setCategory(event.target.value)}}
-                                />
-                                <HomeIcon/>
-                                <input type="radio" value="Others" name="category"
-                                    checked={category === "Others"}
-                                    onChange={(event) => {setCategory(event.target.value)}}
-                                />
-                                <AllInclusiveIcon/>
-                            </div>
-                        </div>
-                        <div className="submit-expenditure"> 
-                            <button className="submit-expenditure-button" onClick={addExpenditure}>Submit</button>
-                        </div>
+                <h1 className="spend-total">{currencySymbol}{round2dp(data.shopping)}</h1>
+            </div>
+            <div className="spend" style={{backgroundColor:"#2A6F97"}}>
+                <div className="spend-title-container">
+                    <h3 className="spend-title" style={{minWidth:"120px"}}>Food & Drinks</h3>
+                    <RestaurantIcon/>
                 </div>
-            </div>  
+                <h1 className="spend-total">{currencySymbol}{round2dp(data.fooddrinks)}</h1>
+            </div>
+            <div className="spend" style={{backgroundColor:"#2C7DA0"}}>
+                <div className="spend-title-container">
+                    <h3 className="spend-title" style={{minWidth:"120px"}}>Bills & Utilities</h3>
+                    <HomeIcon/>
+                </div>
+                <h1 className="spend-total">{currencySymbol}{round2dp(data.billsutilities)}</h1>
+            </div>
+            <div className="spend" style={{backgroundColor:"#468FAF"}}>
+                <div className="spend-title-container">
+                    <h3 className="spend-title">Others</h3>
+                    <AllInclusiveIcon/>
+                </div>
+                <h1 className="spend-total">{currencySymbol}{round2dp(data.others)}</h1>
+            </div>
         </div>
-    </section>
-  )
+
+/*--------------- Recent Transactions Grid ---------------*/
+    const recentTransactions = 
+        <div className="recent-transactions-container">
+            <h3 className="recent-transactions-title">Recent Transactions</h3>
+            <div className="recent-transactions-grid-titles-container">
+                <div className="recent-transactions-grid-title">Type</div>
+                <div className="recent-transactions-grid-title">Purpose</div>
+                <div className="recent-transactions-grid-title">Category</div>
+                <div className="recent-transactions-grid-title">Sum</div>
+                <div className="recent-transactions-grid-title border-right">Date</div>
+            </div>
+            {transactionElements}
+        </div>
+
+/*------------ Add New Expenditure Input Box ------------*/
+    const addNewExpenditure = 
+        <div className="expenditures-container">
+            <h3 className="addCash-expenditure-title">Add Expenditure</h3>
+            {errorBox}
+            <div className="purchase-input"> 
+                <h1 className="purchase-input-text">Purchase:</h1>
+                <input 
+                    className="purchase-input-field"
+                    onChange={(event) => {setPurchase(event.target.value)}}
+                    value={purchase}
+                />
+            </div>
+            <div className="expenditure-sum-input"> 
+                <h1 className="expenditure-sum-input-text">Sum:</h1>
+                <input 
+                    className="expenditure-sum-input-field"
+                    type="number"
+                    onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
+                    onChange={(event) => {setSum(event.target.value)}}
+                    value={sum}
+                />
+            </div>
+            <div className="expenditure-date-input"> 
+                <input 
+                    type="date"
+                    className="expenditure-date-input-field"
+                    onChange={(event) => {setDate(event.target.value)}}
+                    defaultValue={todaysDate}
+                />
+            </div>
+            <div className="expenditure-category">
+                <h1 className="category-input-text">Category:</h1>
+                <div className="category-input-field">
+                    <input type="radio" value="Shopping" name="category"
+                        checked={category === "Shopping"}
+                        onChange={(event) => {setCategory(event.target.value)}}
+                    />
+                    <ShoppingCartIcon/>
+                    <input type="radio" value="Food&Drinks" name="category"
+                        checked={category === "Food&Drinks"}
+                        onChange={(event) => {setCategory(event.target.value)}}
+                    />
+                    <RestaurantIcon/>
+                    <input type="radio" value="Bills&Utilities" name="category"
+                        checked={category === "Bills&Utilities"}
+                        onChange={(event) => {setCategory(event.target.value)}}
+                    />
+                    <HomeIcon/>
+                    <input type="radio" value="Others" name="category"
+                        checked={category === "Others"}
+                        onChange={(event) => {setCategory(event.target.value)}}
+                    />
+                    <AllInclusiveIcon/>
+                </div>
+            </div>
+            <div className="submit-expenditure"> 
+                <button className="submit-expenditure-button" onClick={addExpenditure}>Submit</button>
+            </div>
+        </div>
+
+/*--------------- Return (Render Elements) ---------------*/
+    return (
+        <section className="dashboard">
+            <div className="flex-direction-column">
+                <h1 className="dashboard-title">Dashboard</h1>
+                {accountBalances}
+                <div className="flex-direction-row">
+                    {recentTransactions}
+                    {addNewExpenditure}
+                </div>  
+            </div>
+        </section>
+    )
 }
 
 export default Dashboard
