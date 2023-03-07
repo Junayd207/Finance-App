@@ -24,7 +24,7 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
     const [insufficientFunds,setInsufficientFunds] = useState(false)
     const [insufficientAssets,setInsufficientAssets] = useState(false)
     const [amountEntered,setAmountEntered] = useState(false)
-
+    console.log(data)
 /*---------------------- Collect And Store Appropriate Asset Price Values ----------------------*/
     useEffect(() => {
         const doit = async () => {
@@ -84,7 +84,7 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
             if(buySell === "Buy")
             {
                 await updateDoc(doc(db,"users",auth.currentUser.uid), {
-                    [asset]: increment(round2dp(amount)),
+                    [currency]: increment(round2dp(amount)),
                     balance: increment(round2dp(-price)),
                     savings: increment(round2dp(-price)),
                     transactions: sortedByDate,
@@ -92,7 +92,7 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
             }
             else{
                 await updateDoc(doc(db,"users",auth.currentUser.uid), {
-                    [asset]: increment(round2dp(-amount)),
+                    [currency]: increment(round2dp(-amount)),
                     balance: increment(round2dp(price)),
                     savings: increment(round2dp(price)),
                     transactions: sortedByDate,

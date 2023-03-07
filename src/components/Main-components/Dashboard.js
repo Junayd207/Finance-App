@@ -10,9 +10,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import CloseIcon from '@mui/icons-material/Close';
 
-
-
-function Dashboard({data, todaysDate, round2dp, investmentsValue,currencySymbol}) {
+function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol, shopping, foodDrinks, billsUtilities, others}) {
 /*---------------------- Initialise State Variables ----------------------*/
     const [purchase, setPurchase] = useState("")
     const [sum, setSum] = useState("")
@@ -155,34 +153,41 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue,currencySymbol}
                     <p className="assets-text">{currencySymbol}{round2dp(investmentsValue)}</p>
                 </div>
             </div>
-            <div className="spend" style={{backgroundColor:"#014F86"}}>
-                <div className="spend-title-container">
-                    <h3 className="spend-title">Shopping</h3>
-                    <ShoppingCartIcon/>
+            <div className="flex-direction-column">
+                <div className="monthly-expenses-title-container">
+                    <h1 className="monthly-expenses-title">Monthly Expenses</h1>
                 </div>
-                <h1 className="spend-total">{currencySymbol}{round2dp(data.shopping)}</h1>
-            </div>
-            <div className="spend" style={{backgroundColor:"#2A6F97"}}>
-                <div className="spend-title-container">
-                    <h3 className="spend-title" style={{minWidth:"120px"}}>Food & Drinks</h3>
-                    <RestaurantIcon/>
+                <div className="display-flex">
+                    <div className="spend" style={{backgroundColor:"#014F86"}}>
+                        <div className="spend-title-container">
+                            <h3 className="spend-title">Shopping</h3>
+                            <ShoppingCartIcon/>
+                        </div>
+                        <h1 className="spend-total">{currencySymbol}{round2dp(shopping)}</h1>
+                    </div>
+                    <div className="spend" style={{backgroundColor:"#2A6F97"}}>
+                        <div className="spend-title-container">
+                            <h3 className="spend-title" style={{minWidth:"120px"}}>Food & Drinks</h3>
+                            <RestaurantIcon/>
+                        </div>
+                        <h1 className="spend-total">{currencySymbol}{round2dp(foodDrinks)}</h1>
+                    </div>
+                    <div className="spend" style={{backgroundColor:"#2C7DA0"}}>
+                        <div className="spend-title-container">
+                            <h3 className="spend-title" style={{minWidth:"120px"}}>Bills & Utilities</h3>
+                            <HomeIcon/>
+                        </div>
+                        <h1 className="spend-total">{currencySymbol}{round2dp(billsUtilities)}</h1>
+                    </div>
+                    <div className="spend" style={{backgroundColor:"#468FAF"}}>
+                        <div className="spend-title-container">
+                            <h3 className="spend-title">Others</h3>
+                            <AllInclusiveIcon/>
+                        </div>
+                        <h1 className="spend-total">{currencySymbol}{round2dp(others)}</h1>
+                    </div>
                 </div>
-                <h1 className="spend-total">{currencySymbol}{round2dp(data.fooddrinks)}</h1>
-            </div>
-            <div className="spend" style={{backgroundColor:"#2C7DA0"}}>
-                <div className="spend-title-container">
-                    <h3 className="spend-title" style={{minWidth:"120px"}}>Bills & Utilities</h3>
-                    <HomeIcon/>
-                </div>
-                <h1 className="spend-total">{currencySymbol}{round2dp(data.billsutilities)}</h1>
-            </div>
-            <div className="spend" style={{backgroundColor:"#468FAF"}}>
-                <div className="spend-title-container">
-                    <h3 className="spend-title">Others</h3>
-                    <AllInclusiveIcon/>
-                </div>
-                <h1 className="spend-total">{currencySymbol}{round2dp(data.others)}</h1>
-            </div>
+            </div> 
         </div>
 
 /*--------------- Recent Transactions Grid ---------------*/

@@ -3,6 +3,12 @@
     background-color:var(--blue-shade-8);
 }
 
+.flex-direction-column{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+}
+
 .forecast-title{
     margin:0 auto;
     padding:20px;

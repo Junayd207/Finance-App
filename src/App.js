@@ -23,6 +23,10 @@ function App() {
     const [BNBDailyData, setBNBDailyData] = useState([]);
     const [currencySymbol, setCurrencySymbol] = useState("")
     const [data, setData] = useState({})
+    const [monthlyShopping, setMonthlyShopping] = useState(0)
+    const [monthlyFoodDrinks, setMonthlyFoodDrinks] = useState(0)
+    const [monthlyBillsUtilities, setMonthlyBillsUtilities] = useState(0)
+    const [monthlyOthers, setMonthlyOthers] = useState(0)
 
 /*--------------- Calculate Todays Date In YY-MM-DD Format ---------------*/
     const d = new Date()
@@ -110,6 +114,34 @@ function App() {
                 data.ETH * (coins[1] ? coins[1].current_price : 0) +
                 data.BNB * (coins[3] ? coins[3].current_price : 0)))
 
+/*-------------- Calculate This Months Expenses For Each Catergory --------------*/
+    let firstMonthDate = todaysDate.substring(0,8) + "01"
+    useEffect(() => {
+        if(data.transactions){
+            const transactionsArray = (data.transactions)
+            let shoppingArray = transactionsArray.filter(transaction => transaction.category === "Shopping" && transaction.date >= firstMonthDate)
+            let foodDrinksArray = transactionsArray.filter(transaction => transaction.category === "Food&Drinks" && transaction.date >= firstMonthDate)
+            let billsUtilitiesArray = transactionsArray.filter(transaction => transaction.category === "Bills&Utilities" && transaction.date >= firstMonthDate)
+            let othersArray = transactionsArray.filter(transaction => transaction.category === "Others" && transaction.date >= firstMonthDate)
+            let shoppingCost = 0
+            let foodDrinksCost = 0
+            let billsUtilitiesCost = 0
+            let othersCost = 0
+            for(const x of shoppingArray)
+                shoppingCost += x.sum
+            for(const x of foodDrinksArray)
+                foodDrinksCost += x.sum
+            for(const x of billsUtilitiesArray)
+                billsUtilitiesCost += x.sum
+            for(const x of othersArray)
+                othersCost += x.sum
+            setMonthlyShopping(shoppingCost)
+            setMonthlyFoodDrinks(foodDrinksCost)
+            setMonthlyBillsUtilities(billsUtilitiesCost)
+            setMonthlyOthers(othersCost)
+        }
+    },[data.transactions])
+
 /*---------------- Depending On URL, Render Correct Website Routes ----------------*/
 return (
     <div>
@@ -119,7 +151,8 @@ return (
         <Route path="/dashboard" element={
             <div className="dashboard">
                 <Sidebar />
-                <Dashboard data={data} todaysDate={todaysDate} round2dp={round2dp}  investmentsValue={investmentsValue} currencySymbol={currencySymbol}/>
+                <Dashboard data={data} todaysDate={todaysDate} round2dp={round2dp}  investmentsValue={investmentsValue} currencySymbol={currencySymbol}
+                shopping={monthlyShopping} foodDrinks={monthlyFoodDrinks} billsUtilities={monthlyBillsUtilities} others={monthlyOthers}/>
             </div>
         }/>
         <Route path="/addCash" element={
@@ -138,7 +171,7 @@ return (
         <Route path="/forecast" element={
             <div className="forecast">
                 <Sidebar/>
-                <Forecast/>
+                <Forecast data={data} BTCDailyData = {BTCDailyData.prices} ETHDailyData = {ETHDailyData.prices} BNBDailyData={BNBDailyData.prices}  todaysDate={todaysDate}/>
             </div>
         }/>
         <Route path="/history" element={
