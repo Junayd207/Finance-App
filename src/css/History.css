@@ -25,11 +25,10 @@
 .history-boxes-container{
     display:flex;
     justify-content: center;
-    margin-top: 30px;
+    overflow:auto;
 }
 
 .recent-transactions-container{
-    margin-left:30px;
     background-color:var(--blue-shade-6);
     border-radius:10px;
     padding-bottom:10px;
@@ -195,19 +194,47 @@
     width:50%;
 }
 
-@media (max-width: 1175px){
+
+
+@media (max-width: 1030px){
 
 .history-boxes-container{
+    margin:0;
+    display:flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    height: 1000px; /* set a specific height */
+    overflow: auto; /* allow vertical scrolling */
 }
 
 .history-values-container{
     display:flex;
     order: -1;
+    margin-top:30px;
 }
 
 .filter-transactions-container{
     margin-bottom:20px;
+    padding:0;
+}
+
+.filter-inputs-container{
+    height:130px;
+    display:flex;
+    flex-direction:column;
+    justify-content: space-around;
+}
+
+.filter-category{
+    margin:0
+}
+
+.filter-type{
+    margin:0;
+}
+
+.recent-transactions-container{
+    margin:0 0 20px 0;
 }
 }

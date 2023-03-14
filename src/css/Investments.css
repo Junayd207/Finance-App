@@ -267,7 +267,7 @@
     grid-template-rows: repeat(2, 1fr) 2fr;
     grid-template-columns: 1fr 1fr;
     grid-gap: 30px;
-    height: 400px; /* set a height to enable scrolling */
+    height: 400px; 
     margin-bottom:30px;
 }
 

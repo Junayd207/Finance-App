@@ -75,6 +75,7 @@ return (
                         <Plot data={recommended} layout={{height: 250,width: 350,title:"Recommended",margin: {"t":-1, "b": 10, "l": 10, "r": 10},}}/>
                     </div>
                 </div>
+                <div></div>
             </div>
         </div>
     </main>

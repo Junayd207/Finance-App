@@ -103,31 +103,33 @@ function History({data, round2dp, investmentsValue, currencySymbol, arrow, colla
                 <h3 className="filter-transactions-title">Filter</h3>
                 <FilterAltIcon/>
             </div>
-            <div className="filter-type">
-                <h3 className="filter-type-title">Type:</h3>
-                <select id="type" name="type" className="type-choice" value={type}
-                onChange={(event) => {setType(event.target.value)}}>
-                    <option value="" disabled hidden></option>
-                    <option value="All">All</option>
-                    <option value="Expenditure">Expenditure</option>
-                    <option value="Investment">Investment</option>
-                    <option value="Add-Cash">Add-Cash</option>
-                </select>
-            </div>
-            <div className="filter-category">
-                <h3 className="filter-category-title">Category:</h3>
-                <select id="category" name="category" className="category-choice" value={category}
-                onChange={(event) => {setCategory(event.target.value)}}>
-                    <option value="" disabled hidden></option>
-                    <option value="All">All</option>
-                    <option value="Shopping">Shopping</option>
-                    <option value="Food&Drinks">Food&Drinks</option>
-                    <option value="Bills&Utilities">Bills&Utilities</option>
-                    <option value="Others">Others</option>
-                    <option value="Revenue">Revenue</option>
-                    <option value="Buy">Buy</option>
-                    <option value="Sell">Sell</option>
-                </select>
+            <div className="filter-inputs-container">
+                <div className="filter-type">
+                    <h3 className="filter-type-title">Type:</h3>
+                    <select id="type" name="type" className="type-choice" value={type}
+                    onChange={(event) => {setType(event.target.value)}}>
+                        <option value="" disabled hidden></option>
+                        <option value="All">All</option>
+                        <option value="Expenditure">Expenditure</option>
+                        <option value="Investment">Investment</option>
+                        <option value="Add-Cash">Add-Cash</option>
+                    </select>
+                </div>
+                <div className="filter-category">
+                    <h3 className="filter-category-title">Category:</h3>
+                    <select id="category" name="category" className="category-choice" value={category}
+                    onChange={(event) => {setCategory(event.target.value)}}>
+                        <option value="" disabled hidden></option>
+                        <option value="All">All</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Food&Drinks">Food&Drinks</option>
+                        <option value="Bills&Utilities">Bills&Utilities</option>
+                        <option value="Others">Others</option>
+                        <option value="Revenue">Revenue</option>
+                        <option value="Buy">Buy</option>
+                        <option value="Sell">Sell</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -146,12 +148,14 @@ function History({data, round2dp, investmentsValue, currencySymbol, arrow, colla
                     {arrow}
                     <h1 className="history-title">History</h1>
                 </div>
+                <div id="" style={{overflow:"auto"}}>
                 <div className="history-boxes-container">
                     {recentTransactions}
                     <div className="history-values-container">
                         {viewBalances}
                         {filterGrid}
                     </div>
+                </div>
                 </div>
             </div>
         </main>

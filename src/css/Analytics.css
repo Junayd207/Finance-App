@@ -28,6 +28,7 @@
     justify-content:center;
     margin-top:20px;
     align-items:flex-start;
+    overflow:auto;
 }
 
 .grid-container{
