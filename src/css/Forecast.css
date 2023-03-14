@@ -1,5 +1,5 @@
 .forecast{
-    flex:0.8;
+    width:100%;
     background-color:var(--blue-shade-8);
 }
 
@@ -16,9 +16,15 @@
     color:var(--blue-shade-1);
     font-size: 20px;
     font-weight:500;
-    width:100%;
+    width:calc(100% - 40px);
     height:40px;
     display:flex;
     justify-content: flex-start;
     align-items: center;
+}
+
+.chart-container{
+    display:flex;
+    justify-content: center;
+    margin-top:20px;
 }

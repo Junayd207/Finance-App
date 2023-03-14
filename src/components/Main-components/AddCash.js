@@ -6,7 +6,7 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import CloseIcon from '@mui/icons-material/Close';
 
 
-function AddCash({data, todaysDate, round2dp, investmentsValue, currencySymbol}) {
+function AddCash({data, todaysDate, round2dp, investmentsValue, currencySymbol, arrow, collapsed}) {
 /*---------------------- Initialise State Variables ----------------------*/
     const [source, setSource] = useState("")
     const [sum, setSum] = useState("")
@@ -126,9 +126,19 @@ function resetErrorValues(){
 
 /*--------------- Return (Render Elements) ---------------*/
     return (
-        <section className="addCash">
+        <section className="addCash"
+            style={{
+                filter: !collapsed ? 'grayscale(100%)' : 'grayscale(0%)',
+                opacity: !collapsed ? '0.5' : '1',
+                pointerEvents: !collapsed ? 'none' : 'auto',
+                transition: 'filter 0.5s, opacity 0.5s, pointer-events 0.5s',
+            }}
+        >
             <div className="flex-direction-column">
-                <h1 className="addCash-title">Add Cash</h1>
+                <div className="addCash-title">
+                    {arrow}
+                    <h1 className="addCash-title">Add Cash</h1>
+                </div>
                 <div className="addCash-boxes-container">
                     {addCashInput}
                     {viewBalances}

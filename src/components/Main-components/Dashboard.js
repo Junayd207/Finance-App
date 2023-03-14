@@ -10,7 +10,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import CloseIcon from '@mui/icons-material/Close';
 
-function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol, shopping, foodDrinks, billsUtilities, others}) {
+function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol, shopping, foodDrinks, billsUtilities, others,
+                    arrow, collapsed}) {
 /*---------------------- Initialise State Variables ----------------------*/
     const [purchase, setPurchase] = useState("")
     const [sum, setSum] = useState("")
@@ -153,8 +154,8 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
                     <p className="assets-text">{currencySymbol}{round2dp(investmentsValue)}</p>
                 </div>
             </div>
-            <div className="flex-direction-column">
-                <div className="monthly-expenses-title-container">
+            <div className="balance-flex-direction-column">
+                <div>
                     <h1 className="monthly-expenses-title">Monthly Expenses</h1>
                 </div>
                 <div className="display-flex">
@@ -192,7 +193,7 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
 
 /*--------------- Recent Transactions Grid ---------------*/
     const recentTransactions = 
-        <div className="recent-transactions-container">
+        <div className="dashboard-recent-transactions-container">
             <h3 className="recent-transactions-title">Recent Transactions</h3>
             <div className="recent-transactions-grid-titles-container">
                 <div className="recent-transactions-grid-title">Type</div>
@@ -264,17 +265,28 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
                 <button className="submit-expenditure-button" onClick={addExpenditure}>Submit</button>
             </div>
         </div>
-
 /*--------------- Return (Render Elements) ---------------*/
     return (
-        <section className="dashboard">
+        <section className="dashboard" 
+            style={{
+                filter: !collapsed ? 'grayscale(100%)' : 'grayscale(0%)',
+                opacity: !collapsed ? '0.5' : '1',
+                pointerEvents: !collapsed ? 'none' : 'auto',
+                transition: 'filter 0.5s, opacity 0.5s, pointer-events 0.5s',
+            }}
+        >
             <div className="flex-direction-column">
-                <h1 className="dashboard-title">Dashboard</h1>
-                {accountBalances}
-                <div className="flex-direction-row">
-                    {recentTransactions}
-                    {addNewExpenditure}
-                </div>  
+                <div className="dashboard-title-container">
+                    {arrow}
+                    <h1 className="dashboard-title-text">Dashboard</h1>
+                </div>
+                <div className="dashboard-elements">
+                    {accountBalances}
+                    <div className="flex-direction-row">
+                        {recentTransactions}
+                        {addNewExpenditure}
+                    </div>  
+                </div>
             </div>
         </section>
     )

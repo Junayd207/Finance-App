@@ -3,7 +3,7 @@ import Plot from 'react-plotly.js';
 import moment from 'moment';
 import '../../css/Forecast.css';
 
-function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate}) {
+function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate, arrow, collapsed}) {
     const [portfolioValue, setPortfolioValue] = useState([])
     const [portfolioXValues, setPortfolioXValues] = useState([])
     const [nextPrices, setNextPrices] = useState([])
@@ -92,7 +92,7 @@ function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate}) 
             const normalizedOutput = output.map((y) => (y - outputMean) / outputStd);
 
             // Fit a polynomial regression model to the normalized data
-            const degree = 11;
+            const degree = 3;
             const modelCoefficients = polynomialRegression(normalizedInput, normalizedOutput, degree);
 
             // Use the polynomial regression model to predict the next 5 stock prices
@@ -149,7 +149,7 @@ function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate}) 
 
 /*--------------- Chart Of Portfolio Value And Forecast ---------------*/
     const forecastChart = 
-        <div>
+        <div className="chart-container">
             <Plot
                 data={[
                     {
@@ -175,9 +175,19 @@ function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate}) 
         </div>
 /*--------------- Return (Render Elements) ---------------*/
     return (
-        <main className="forecast">
+        <main className="forecast"
+            style={{
+                filter: !collapsed ? 'grayscale(100%)' : 'grayscale(0%)',
+                opacity: !collapsed ? '0.5' : '1',
+                pointerEvents: !collapsed ? 'none' : 'auto',
+                transition: 'filter 0.5s, opacity 0.5s, pointer-events 0.5s',
+            }}
+        >
             <div className="flex-direction-column">
-                <h1 className="forecast-title">Forecast</h1>
+                <div className="forecast-title">
+                    {arrow}
+                    <h1 className="forecast-title">Forecast</h1>
+                </div>
                 {forecastChart}
             </div>
         </main>

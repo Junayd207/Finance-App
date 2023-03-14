@@ -10,7 +10,8 @@ import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
 import CloseIcon from '@mui/icons-material/Close';
 
-function Investments({todaysDate ,data, coins, round2dp, investmentsValue, currencySymbol, BTCDailyData, ETHDailyData, BNBDailyData}) {
+function Investments({todaysDate ,data, coins, round2dp, investmentsValue, currencySymbol, BTCDailyData, ETHDailyData, 
+                    BNBDailyData, arrow, collapsed}) {
 /*---------------------- Initialise State Variables ----------------------*/    
     const [amount, setAmount] = useState(0)
     const [currency, setCurrency] = useState("BTC")
@@ -154,7 +155,6 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
                     },
                 ]}
                 layout={{width:700,height:400,title:asset + " Daily Chart",paper_bgcolor:"#fff",plot_bgcolor:"#fff",xaxis:{title:"Date"},yaxis:{title:[asset]+" (" + currencySymbol+")"}}}
-                
             />
             <div className="asset-choice">
                     <select id="asset" name="asset" className="asset-choice-input" value={asset}
@@ -299,15 +299,25 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
 
 /*--------------- Return (Render Elements) ---------------*/
     return (
-        <main className="investments">
+        <main className="investments"
+            style={{
+                filter: !collapsed ? 'grayscale(100%)' : 'grayscale(0%)',
+                opacity: !collapsed ? '0.5' : '1',
+                pointerEvents: !collapsed ? 'none' : 'auto',
+                transition: 'filter 0.5s, opacity 0.5s, pointer-events 0.5s',
+            }}
+        >
             <div className="flex-direction-column">
-                <h1 className="investments-title">Investments</h1>
+                <div className="investments-title">
+                    {arrow}
+                    <h1 className="investments-title">Investments</h1>
+                </div>
                 <div className="display-flex">
-                    <div style={{height:"690px"}}>
+                    <div style={{height:"580px"}}>
                         {currentAssetPrices}
                         {assetChart}
                     </div>  
-                    <div>
+                    <div className="investmentBoxes">
                         {viewBalances}
                         {investmentsOverview}
                         {makeInvestment}

@@ -11,6 +11,19 @@ body{
     color:white;
 }
 
+.arrow{
+    display:flex;
+    align-items: center;
+    margin-right:20px;
+    filter: none !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.arrow:hover {
+    cursor: pointer;
+  }
+
 .dashboard{
     display:flex;
 }
@@ -31,7 +44,7 @@ body{
     display:flex;
 }
 
-.profile{
+.analytics{
     display:flex;
 }
 

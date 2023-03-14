@@ -1,13 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;900&display=swap');
 
-
 .sidebar{
     display:flex;
     flex-direction:column;
     background-color:var(--blue-shade-6);
     height:100vh;
     flex:0.2;
-    min-width: 160px;
+    width: 160px;
+    transition: all 0.5s;
+}
+
+.collapsed{
+    width:0;
 }
 
 .title{
@@ -22,6 +26,7 @@
     display:flex;
     justify-content: center;
     align-items: center;
+    white-space: nowrap;
 }
 
 .logout{
@@ -29,6 +34,7 @@
     margin-top:auto;
     text-align: center;
     border-top: 2px solid var(--blue-shade-9);
+    padding:10px;
 }
 
 .logout:hover {
@@ -41,4 +47,5 @@
 .logout-text{
     padding-right:10px;
     margin: auto 0 auto auto;
+    white-space: nowrap;
 }

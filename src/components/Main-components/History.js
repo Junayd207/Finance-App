@@ -4,7 +4,7 @@ import '../../css/History.css';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
-function History({data, round2dp, investmentsValue, currencySymbol}) {
+function History({data, round2dp, investmentsValue, currencySymbol, arrow, collapsed}) {
 /*---------------------- Initialise State Variables ----------------------*/
     const [type, setType] = useState("All")
     const [category, setCategory] = useState("All")
@@ -133,12 +133,22 @@ function History({data, round2dp, investmentsValue, currencySymbol}) {
 
 /*--------------- Return (Render Elements) ---------------*/
     return (
-        <main className="history">
+        <main className="history"
+            style={{
+                filter: !collapsed ? 'grayscale(100%)' : 'grayscale(0%)',
+                opacity: !collapsed ? '0.5' : '1',
+                pointerEvents: !collapsed ? 'none' : 'auto',
+                transition: 'filter 0.5s, opacity 0.5s, pointer-events 0.5s',
+            }}
+        >
             <div className="flex-direction-column">
-                <h1 className="history-title">History</h1>
+                <div className="history-title">
+                    {arrow}
+                    <h1 className="history-title">History</h1>
+                </div>
                 <div className="history-boxes-container">
                     {recentTransactions}
-                    <div>
+                    <div className="history-values-container">
                         {viewBalances}
                         {filterGrid}
                     </div>

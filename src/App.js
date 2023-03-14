@@ -11,8 +11,10 @@ import AddCash from './components/Main-components/AddCash';
 import Investments from './components/Main-components/Investments';
 import Forecast from './components/Main-components/Forecast';
 import History from './components/Main-components/History';
-import Profile from './components/Main-components/Profile';
+import Analytics from './components/Main-components/Analytics';
 import Settings from './components/Main-components/Settings';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import axios from "axios";
 
 function App() { 
@@ -27,6 +29,15 @@ function App() {
     const [monthlyFoodDrinks, setMonthlyFoodDrinks] = useState(0)
     const [monthlyBillsUtilities, setMonthlyBillsUtilities] = useState(0)
     const [monthlyOthers, setMonthlyOthers] = useState(0)
+    const [monthlyCashAdded, setMonthlyCashAdded] = useState(0)
+    const [monthlyNetInvestment, setMonthlyNetInvestment] = useState(0)
+    const [collapsed, setCollapsed] = useState(true)
+
+
+    const arrow =   <div className="arrow" style={{ filter: "none", opacity: 1, pointerEvents: "auto" }} onClick={() => setCollapsed(!collapsed)}>
+                        {collapsed && <ArrowForwardIosIcon/>}
+                        {!collapsed && <ArrowBackIosNewIcon/>}
+                    </div>
 
 /*--------------- Calculate Todays Date In YY-MM-DD Format ---------------*/
     const d = new Date()
@@ -118,15 +129,22 @@ function App() {
     let firstMonthDate = todaysDate.substring(0,8) + "01"
     useEffect(() => {
         if(data.transactions){
+            console.log(data.transactions)
             const transactionsArray = (data.transactions)
             let shoppingArray = transactionsArray.filter(transaction => transaction.category === "Shopping" && transaction.date >= firstMonthDate)
             let foodDrinksArray = transactionsArray.filter(transaction => transaction.category === "Food&Drinks" && transaction.date >= firstMonthDate)
             let billsUtilitiesArray = transactionsArray.filter(transaction => transaction.category === "Bills&Utilities" && transaction.date >= firstMonthDate)
             let othersArray = transactionsArray.filter(transaction => transaction.category === "Others" && transaction.date >= firstMonthDate)
+            let addCashArray = transactionsArray.filter(transaction => transaction.type === "Add-Cash" && transaction.date >= firstMonthDate)
+            let buyInvestmentArray = transactionsArray.filter(transaction => transaction.category === "Buy" && transaction.date >= firstMonthDate)
+            let sellInvestmentArray = transactionsArray.filter(transaction => transaction.category === "Sell" && transaction.date >= firstMonthDate)
             let shoppingCost = 0
             let foodDrinksCost = 0
             let billsUtilitiesCost = 0
             let othersCost = 0
+            let totalCashAdded = 0
+            let totalInvestmentsMade = 0
+            let totalInvestmentsSold = 0
             for(const x of shoppingArray)
                 shoppingCost += x.sum
             for(const x of foodDrinksArray)
@@ -135,10 +153,18 @@ function App() {
                 billsUtilitiesCost += x.sum
             for(const x of othersArray)
                 othersCost += x.sum
+            for(const x of addCashArray)
+                totalCashAdded += x.sum
+            for(const x of buyInvestmentArray)
+                totalInvestmentsMade += x.sum
+            for(const x of sellInvestmentArray)
+                totalInvestmentsSold += x.sum
             setMonthlyShopping(shoppingCost)
             setMonthlyFoodDrinks(foodDrinksCost)
             setMonthlyBillsUtilities(billsUtilitiesCost)
             setMonthlyOthers(othersCost)
+            setMonthlyCashAdded(totalCashAdded)
+            setMonthlyNetInvestment(totalInvestmentsMade - totalInvestmentsSold)
         }
     },[data.transactions])
 
@@ -150,46 +176,54 @@ return (
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/dashboard" element={
             <div className="dashboard">
-                <Sidebar />
-                <Dashboard data={data} todaysDate={todaysDate} round2dp={round2dp}  investmentsValue={investmentsValue} currencySymbol={currencySymbol}
-                shopping={monthlyShopping} foodDrinks={monthlyFoodDrinks} billsUtilities={monthlyBillsUtilities} others={monthlyOthers}/>
+                <Sidebar collapsed={collapsed}/>
+                <Dashboard data={data} todaysDate={todaysDate} round2dp={round2dp} investmentsValue={investmentsValue} currencySymbol={currencySymbol}
+                shopping={monthlyShopping} foodDrinks={monthlyFoodDrinks} billsUtilities={monthlyBillsUtilities} others={monthlyOthers} 
+                arrow={arrow} collapsed={collapsed}/>
             </div>
         }/>
         <Route path="/addCash" element={
             <div className="addCash">
-                <Sidebar/>
-                <AddCash  data={data}  todaysDate={todaysDate} round2dp={round2dp}  investmentsValue={investmentsValue} currencySymbol={currencySymbol}/>
+                <Sidebar collapsed={collapsed}/>
+                <AddCash data={data} todaysDate={todaysDate} round2dp={round2dp} investmentsValue={investmentsValue} 
+                currencySymbol={currencySymbol} arrow={arrow} collapsed={collapsed}/>
             </div>
         }/>
         <Route path="/investments" element={
             <div className="investments">
-                <Sidebar/>
-                <Investments todaysDate={todaysDate} data={data} coins={coins} round2dp={round2dp} investmentsValue={investmentsValue} currencySymbol={currencySymbol}
-                            BTCDailyData = {BTCDailyData.prices} ETHDailyData = {ETHDailyData.prices} BNBDailyData = {BNBDailyData.prices}/>
+                <Sidebar collapsed={collapsed}/>
+                <Investments todaysDate={todaysDate} data={data} coins={coins} round2dp={round2dp} investmentsValue={investmentsValue} 
+                currencySymbol={currencySymbol} BTCDailyData = {BTCDailyData.prices} ETHDailyData = {ETHDailyData.prices} 
+                BNBDailyData = {BNBDailyData.prices} arrow={arrow} collapsed={collapsed}/>
             </div>
         }/>
         <Route path="/forecast" element={
             <div className="forecast">
-                <Sidebar/>
-                <Forecast data={data} BTCDailyData = {BTCDailyData.prices} ETHDailyData = {ETHDailyData.prices} BNBDailyData={BNBDailyData.prices}  todaysDate={todaysDate}/>
+                <Sidebar collapsed={collapsed}/>
+                <Forecast data={data} BTCDailyData = {BTCDailyData.prices} ETHDailyData = {ETHDailyData.prices} 
+                BNBDailyData={BNBDailyData.prices} todaysDate={todaysDate} arrow={arrow} collapsed={collapsed}/>
             </div>
         }/>
         <Route path="/history" element={
             <div className="history">
-                <Sidebar/>
-                <History data={data} round2dp={round2dp} investmentsValue={investmentsValue} currencySymbol={currencySymbol}/>
+                <Sidebar collapsed={collapsed}/>
+                <History data={data} round2dp={round2dp} investmentsValue={investmentsValue} currencySymbol={currencySymbol}
+                arrow={arrow} collapsed={collapsed}/>
             </div>
         }/>
-        <Route path="/profile" element={
-            <div className="profile">
-                <Sidebar/>
-                <Profile/>
+        <Route path="/analytics" element={
+            <div className="analytics">
+                <Sidebar collapsed={collapsed}/>
+                <Analytics round2dp={round2dp} monthlyShopping={monthlyShopping} monthlyFoodDrinks={monthlyFoodDrinks} 
+                monthlyBillsUtilities={monthlyBillsUtilities} monthlyOthers={monthlyOthers} monthlyNetInvestment={monthlyNetInvestment}
+                monthlyCashAdded={monthlyCashAdded} data={data} coins={coins} investmentsValue={investmentsValue} arrow={arrow}
+                collapsed={collapsed}/>
             </div>
         }/>
         <Route path="/settings" element={
             <div className="settings">
-                <Sidebar/>
-                <Settings/>
+                <Sidebar collapsed={collapsed}/>
+                <Settings arrow={arrow} collapsed={collapsed}/>
             </div>
         }/>
       </Routes>

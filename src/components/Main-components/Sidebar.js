@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
+import { Helmet } from "react-helmet"
 import "../../css/Sidebar.css";
 import SidebarOption from "./SidebarOption";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -8,11 +9,12 @@ import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import HistoryIcon from "@mui/icons-material/History";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import PieChartIcon from '@mui/icons-material/PieChart';
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-const Sidebar = () => {
+const Sidebar = ({collapsed}) => {
+
     const logout = async () => {
         try {
             await signOut(auth);
@@ -22,38 +24,34 @@ const Sidebar = () => {
     };
 
     return (
-        <main className="sidebar">
-            <h1 className="title">My Finance Pal</h1>
-            <SidebarOption text="Dashboard" Icon={DashboardIcon} link="/dashboard" />
-            <SidebarOption text="Add Cash" Icon={LocalAtmIcon} link="/addCash" />
-            <SidebarOption
-                text="Investments"
-                Icon={ShowChartIcon}
-                link="/investments"
-            />
-            <SidebarOption text="Forecast" Icon={QueryStatsIcon} link="/forecast" />
-            <SidebarOption text="History" Icon={HistoryIcon} link="/history" />
-            <SidebarOption text="Profile" Icon={AccountBoxIcon} link="/profile" />
-            <SidebarOption text="Settings" Icon={SettingsIcon} link="/settings" />
-            <div
-                className="logout"
-                onClick={(e) => {
-                    logout();
-                    e.preventDefault();
-                    window.location.href = "/";
-                }}
-            >
-                <h3 className="logout-text">Log out</h3>
-                <LogoutIcon
-                    sx={{
-                        fontSize: 30,
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        paddingRight: 1,
+        <main>
+            <div className="sidebar"id="sidebar" style={{width: !collapsed ? "200px" : "50px"}}>
+                <h1 className="title">{collapsed ? "MFP" : "My Finance Pal"}</h1>
+                <SidebarOption text="Dashboard" Icon={DashboardIcon} link="/dashboard" collapsed={collapsed}/>
+                <SidebarOption text="Add Cash" Icon={LocalAtmIcon} link="/addCash" collapsed={collapsed}/>
+                <SidebarOption text="Investments" Icon={ShowChartIcon} link="/investments"collapsed={collapsed}/>
+                <SidebarOption text="Forecast" Icon={QueryStatsIcon} link="/forecast" collapsed={collapsed}/>
+                <SidebarOption text="History" Icon={HistoryIcon} link="/history" collapsed={collapsed}/>
+                <SidebarOption text="Analytics" Icon={PieChartIcon} link="/analytics" collapsed={collapsed}/>
+                <SidebarOption text="Settings" Icon={SettingsIcon} link="/settings" collapsed={collapsed}/>
+                <div
+                    className="logout"
+                    onClick={(e) => {
+                        logout();
+                        e.preventDefault();
+                        window.location.href = "/";
                     }}
-                />
+                >
+                    <h3 style={{display: !collapsed ? "block" : "none"}} className="logout-text">Log out</h3>
+                    <LogoutIcon
+                        sx={{
+                            fontSize: 30,
+                        }}
+                    />
+                </div>
             </div>
         </main>
+
     );
 };
 
