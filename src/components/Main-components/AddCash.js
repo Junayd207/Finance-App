@@ -14,19 +14,19 @@ function AddCash({data, todaysDate, round2dp, investmentsValue, currencySymbol, 
     const [sourceShort, setSourceShort] = useState(false)
     const [sumShort, setSumShort] = useState(false)
     const [dateShort, setDateShort] = useState(false)
-    
 /*------------ Add Cash And Add Transaction To Database Function ------------*/
     const addCash = async() => {
+        resetErrorValues()
         if(source.length < 1){
             setSourceShort(true)
         }
-        if(sum.length < 1){
+        if(sum.length < 1 || parseFloat(sum) <= 0){
             setSumShort(true)
         }
-        if(date.length < 1){
+        if(date.length < 1 || date > todaysDate){
             setDateShort(true)
         }
-        if(source.length > 0 && sum.length > 0 && date.length > 0){
+        if(source.length > 0 && sum.length > 0 && date.length > 0 && parseFloat(sum) > 0 && date <= todaysDate){
             let sortedByDate = [{type:"Add-Cash",source:source, sum:round2dp(sum), date:date, category:"Revenue"},...(data.transactions)]
             sortedByDate.sort(function(a,b){
                 return new Date(b.date) - new Date(a.date)
@@ -39,7 +39,6 @@ function AddCash({data, todaysDate, round2dp, investmentsValue, currencySymbol, 
             resetValues()
         }
     }
-
 /*---------- Reset User Input Values After Cash Added ----------*/
     function resetValues() {
         setSource("")
@@ -62,9 +61,10 @@ function resetErrorValues(){
             </div>
             {sourceShort && <p className="error-text">Please Enter A Valid Source</p>}
             {sumShort && <p className="error-text">Please Enter A Valid Sum</p>}
-            {dateShort && <p className="error-text">Please Select A Date</p>}
+            {dateShort && <p className="error-text">Please Select A Valid Date</p>}
         </div> : null
-
+console.log(sum)
+console.log(typeof sum)
  /*--------------- Add Cash Input Box ---------------*/
     const addCashInput = 
     <div className="addCash-functions-container">
@@ -76,7 +76,12 @@ function resetErrorValues(){
                 <input 
                     className="source-input-field"
                     value={source}
-                    onChange={(event) => {setSource(event.target.value)}}
+                    onChange={(event) => {
+                        const inputValue = event.target.value;
+                        if (inputValue.length <= 10) {
+                          setSource(inputValue.slice(0, 10));
+                        }
+                    }}  
                 />
             </div>
             <div className="sum-input"> 
@@ -86,7 +91,13 @@ function resetErrorValues(){
                     type="number"
                     onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
                     value={sum}
-                    onChange={(event) => {setSum(event.target.value)}}
+                    onChange={(event) => {
+                        const inputValue = event.target.value;
+                        const regex = /^(?!0\d)\d*(\.\d{0,2})?$/;
+                        if (inputValue === '' || (regex.test(inputValue) && parseFloat(inputValue) <= 10000000)) {
+                            setSum(inputValue);
+                        }
+                    }}
                 />
             </div>
             <div className="date-input"> 

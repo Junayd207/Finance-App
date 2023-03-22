@@ -19,7 +19,7 @@ const changeCurrency = async() => {
     }
     else{
         await updateDoc(doc(db,"users",auth.currentUser.uid), {
-            currency: currency
+            currencySymbol: currency
         })
         resetValues()
     }

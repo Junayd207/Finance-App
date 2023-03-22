@@ -60,22 +60,23 @@ return (
                 {arrow}
                 <h1 className="analytics-title">Analytics</h1>
             </div>
-            <div className="display-flex">
-                <div className="grid-container">
-                    <div>
-                        <Plot data={monthlyExpenditure} layout={{height: 250,width: 350,title:"Monthly Expenses",margin: {"t":-1, "b": 10, "l": 10, "r": 10},}}/>
-                    </div>
-                    <div>
-                        <Plot data={investmentBreakdown} layout={{height: 250,width: 350,title:"Investment Breakdown",margin: {"t":-1, "b": 10, "l": 10, "r": 10},}}/>
-                    </div>
-                    <div>
-                        <Plot data={assetBreakdown} layout={{height: 250,width: 350,title:"Asset Allocation",margin: {"t":-1, "b": 10, "l": 10, "r": 10},}}/>
-                    </div>
-                    <div>
-                        <Plot data={recommended} layout={{height: 250,width: 350,title:"Recommended",margin: {"t":-1, "b": 10, "l": 10, "r": 10},}}/>
+            <div className="analytics-content">
+                <div className="display-flex">
+                    <div className="grid-container">
+                        <div className="pie-chart">
+                            <Plot data={monthlyExpenditure} layout={{height: 250,width: 350,title:"Monthly Expenses",margin: {"t":-1, "b": 10, "l": 10, "r": 10},}}/>
+                        </div>
+                        <div className="pie-chart">
+                            <Plot data={investmentBreakdown} layout={{height: 250,width: 350,title:"Investment Breakdown",margin: {"t":-1, "b": 10, "l": 10, "r": 10},}}/>
+                        </div>
+                        <div className="pie-chart">
+                            <Plot data={assetBreakdown} layout={{height: 250,width: 350,title:"Asset Allocation",margin: {"t":-1, "b": 10, "l": 10, "r": 10},}}/>
+                        </div>
+                        <div className="pie-chart">
+                            <Plot data={recommended} layout={{height: 250,width: 350,title:"Recommended",margin: {"t":-1, "b": 10, "l": 10, "r": 10},}}/>
+                        </div>
                     </div>
                 </div>
-                <div></div>
             </div>
         </div>
     </main>

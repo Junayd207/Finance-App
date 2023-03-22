@@ -17,6 +17,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import axios from "axios";
 
+
 function App() { 
 /*---------------------- Initialise state variables ----------------------*/
     const [coins, setCoins] = useState([]);
@@ -24,7 +25,7 @@ function App() {
     const [ETHDailyData, setETHDailyData] = useState([]);
     const [BNBDailyData, setBNBDailyData] = useState([]);
     const [currencySymbol, setCurrencySymbol] = useState("")
-    const [data, setData] = useState({})
+    const [data, setData] = useState({transactions:[], currencySymbol:"",})
     const [monthlyShopping, setMonthlyShopping] = useState(0)
     const [monthlyFoodDrinks, setMonthlyFoodDrinks] = useState(0)
     const [monthlyBillsUtilities, setMonthlyBillsUtilities] = useState(0)
@@ -32,12 +33,13 @@ function App() {
     const [monthlyCashAdded, setMonthlyCashAdded] = useState(0)
     const [monthlyNetInvestment, setMonthlyNetInvestment] = useState(0)
     const [collapsed, setCollapsed] = useState(true)
-
+    
 
     const arrow =   <div className="arrow" style={{ filter: "none", opacity: 1, pointerEvents: "auto" }} onClick={() => setCollapsed(!collapsed)}>
                         {collapsed && <ArrowForwardIosIcon/>}
                         {!collapsed && <ArrowBackIosNewIcon/>}
                     </div>
+
 
 /*--------------- Calculate Todays Date In YY-MM-DD Format ---------------*/
     const d = new Date()
@@ -72,13 +74,12 @@ function App() {
         return() => unsubscribe()
         })
     },[auth.currentUser])
-
 /*useEffect Hook To Collect API Price Data With Dependancy To Refresh If Currency(£$€) Changes*/
     useEffect(() => {
         const getData = async () => {
             try {
               const res = await axios.get(
-                `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${data.currency}&order=market_cap_desc&per_page=4&page=1&sparkline=true`
+                `http://api.coingecko.com/api/v3/coins/markets?vs_currency=${data.currencySymbol}&order=market_cap_desc&per_page=4&page=1&sparkline=true`
               );
               setCoins(res.data);
             } catch (error) {
@@ -86,7 +87,7 @@ function App() {
             }
             try {
                 const rest = await axios.get(
-                  `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=${data.currency}&days=30&interval=daily`
+                  `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=${data.currencySymbol}&days=30&interval=daily`
                 );
                 setBTCDailyData(rest.data);
             } catch (error) {
@@ -94,7 +95,7 @@ function App() {
             }
             try {
                 const rest = await axios.get(
-                  `https://api.coingecko.com/api/v3/coins/ethereum/market_chart?vs_currency=${data.currency}&days=30&interval=daily`
+                  `https://api.coingecko.com/api/v3/coins/ethereum/market_chart?vs_currency=${data.currencySymbol}&days=30&interval=daily`
                 );
                 setETHDailyData(rest.data);
             } catch (error) {
@@ -102,34 +103,36 @@ function App() {
             }
             try {
                 const rest = await axios.get(
-                  `https://api.coingecko.com/api/v3/coins/binancecoin/market_chart?vs_currency=${data.currency}&days=30&interval=daily`
+                  `https://api.coingecko.com/api/v3/coins/binancecoin/market_chart?vs_currency=${data.currencySymbol}&days=30&interval=daily`
                 );
                 setBNBDailyData(rest.data);
             } catch (error) {
                 console.error(error);
             }
         };
-        if(data.currency){
-            if(data.currency === "GBP")
+        if(data.currencySymbol){
+            if(data.currencySymbol === "GBP")
                 setCurrencySymbol("£")
-            else if(data.currency === "USD")
+            else if(data.currencySymbol === "USD")
                 setCurrencySymbol("$")
-            else if(data.currency === "EUR")
+            else if(data.currencySymbol === "EUR")
                 setCurrencySymbol("€")
             getData()
         }  
-    }, [data.currency]);
+    }, [data.currencySymbol]);
+    console.log(coins[0])
+
 
 /*--------------------- Calculate Total Value Of Investments ---------------------*/
-    let investmentsValue = (round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0) + 
+    let investmentsValue = 0;
+    if(data){investmentsValue = (round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0) + 
                 data.ETH * (coins[1] ? coins[1].current_price : 0) +
-                data.BNB * (coins[3] ? coins[3].current_price : 0)))
+                data.BNB * (coins[3] ? coins[3].current_price : 0)))}
 
 /*-------------- Calculate This Months Expenses For Each Catergory --------------*/
     let firstMonthDate = todaysDate.substring(0,8) + "01"
     useEffect(() => {
         if(data.transactions){
-            console.log(data.transactions)
             const transactionsArray = (data.transactions)
             let shoppingArray = transactionsArray.filter(transaction => transaction.category === "Shopping" && transaction.date >= firstMonthDate)
             let foodDrinksArray = transactionsArray.filter(transaction => transaction.category === "Food&Drinks" && transaction.date >= firstMonthDate)
@@ -168,6 +171,22 @@ function App() {
         }
     },[data.transactions])
 
+/*--------------------Check if screen resolution resembles a mobile-----------------------*/
+const [isMobile, setIsMobile] = useState(true)
+ 
+//choose the screen size 
+const handleResize = () => {
+  if (window.innerWidth < 780) {
+      setIsMobile(true)
+  } else {
+      setIsMobile(false)
+  }
+}
+// create an event listener
+useEffect(() => {
+  window.addEventListener("resize", handleResize)
+})
+
 /*---------------- Depending On URL, Render Correct Website Routes ----------------*/
 return (
     <div>
@@ -201,7 +220,7 @@ return (
             <div className="forecast">
                 <Sidebar collapsed={collapsed}/>
                 <Forecast data={data} BTCDailyData = {BTCDailyData.prices} ETHDailyData = {ETHDailyData.prices} 
-                BNBDailyData={BNBDailyData.prices} todaysDate={todaysDate} arrow={arrow} collapsed={collapsed}/>
+                BNBDailyData={BNBDailyData.prices} todaysDate={todaysDate} arrow={arrow} collapsed={collapsed} currencySymbol={currencySymbol}/>
             </div>
         }/>
         <Route path="/history" element={

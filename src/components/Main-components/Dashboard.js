@@ -21,6 +21,8 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
     const [sumShort,setSumShort] = useState(false)
     const [dateShort,setDateShort] = useState(false)
     const [categoryShort,setCategoryShort] = useState(false)
+    const [invalidSum,setInvalidSum] = useState(false)
+
 
 /*------------ Get Transaction Data And Render It Into A Table (Upto 10) ------------*/
     var transactionElements = []
@@ -28,44 +30,51 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
     const getTransactionsTable = async() => {
         if(data.transactions)
             transactionsArray = (data.transactions).slice(0, 9)
-        transactionElements = transactionsArray.map(transaction => {
-            let bgColor = ""
-            if(transaction.category === "Shopping"){
-                bgColor="#014F86"
-            }
-            else if(transaction.category === "Food&Drinks"){
-                bgColor="#2A6f97"
-            }
-            else if(transaction.category === "Bills&Utilities"){
-                bgColor="#2C7DA0"
-            }
-            else if(transaction.category === "Others"){
-                bgColor="#468FAF"
-            }
-            else{
-                bgColor="#38B000"
-            }
-            let typeColor=""
-            if(transaction.type === "Expenditure"){
-                typeColor="#ff8fa3"
-            }
-            else{
-                typeColor="#38B000"
-            }
-            return(
-            <div className="transactions-grid" key={nanoid()}>
-                <div className="transactions-grid-item" key={nanoid()}
-                    style={{backgroundColor:typeColor}}
-                >{transaction.type}</div>
-                <div className="transactions-grid-item transactions-grid-item-purpose" key={nanoid()}>{transaction.purchase ? transaction.purchase : (transaction.source ? transaction.source : transaction.asset)}</div>
-                <div className="transactions-grid-item transactions-grid-item-category" key={nanoid()}
-                    style={{backgroundColor:bgColor}}  
-                >{transaction.category ? transaction.category : "Revenue"}</div>
-                <div className="transactions-grid-item transactions-grid-item-sum" key={nanoid()}>{currencySymbol}{transaction.sum}</div>
-                <div className="transactions-grid-item border-right" key={nanoid()}>{transaction.date}</div>
-            </div>
-            )
-        })
+
+        if(transactionsArray.length > 0){
+            transactionElements = transactionsArray.map(transaction => {
+                let bgColor = ""
+                if(transaction.category === "Shopping"){
+                    bgColor="#014F86"
+                }
+                else if(transaction.category === "Food&Drinks"){
+                    bgColor="#2A6f97"
+                }
+                else if(transaction.category === "Bills&Utilities"){
+                    bgColor="#2C7DA0"
+                }
+                else if(transaction.category === "Others"){
+                    bgColor="#468FAF"
+                }
+                else{
+                    bgColor="#38B000"
+                }
+                let typeColor=""
+                if(transaction.type === "Expenditure"){
+                    typeColor="#ff8fa3"
+                }
+                else{
+                    typeColor="#38B000"
+                }
+                return(
+                <div className="transactions-grid" key={nanoid()}>
+                    <div className="transactions-grid-item" key={nanoid()}
+                        style={{backgroundColor:typeColor}}
+                    >{transaction.type}</div>
+                    <div className="transactions-grid-item transactions-grid-item-purpose" key={nanoid()}>{transaction.purchase ? transaction.purchase : (transaction.source ? transaction.source : transaction.asset)}</div>
+                    <div className="transactions-grid-item transactions-grid-item-category" key={nanoid()}
+                        style={{backgroundColor:bgColor}}  
+                    >{transaction.category ? transaction.category : "Revenue"}</div>
+                    <div className="transactions-grid-item transactions-grid-item-sum" key={nanoid()}>{currencySymbol}{transaction.sum}</div>
+                    <div className="transactions-grid-item border-right" key={nanoid()}>{transaction.date}</div>
+                </div>
+                )
+            })
+        }
+        else{
+            transactionElements =
+            <h1 className="no-transaction-text">No Transactions Yet</h1>
+        }
     }
     getTransactionsTable()
 
@@ -78,13 +87,17 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
         if(sum.length < 1){
             setSumShort(true)
         }
-        if(date.length < 1){
+        if(date.length < 1 || date > todaysDate){
             setDateShort(true)
         }
         if(category.length < 1){
             setCategoryShort(true)
         }
-        if(purchase.length > 0 && sum.length > 0 && date.length > 0 && category.length > 0){
+        if(parseFloat(sum) <= 0){
+            setInvalidSum(true)
+        }
+        if(purchase.length > 0 && sum.length > 0 && date.length > 0 && category.length > 0 && date <= todaysDate && parseFloat(sum) > 0){
+            console.log("hello")
             let sortedByDate = [{type:"Expenditure", purchase:purchase, sum:round2dp(sum), date:date, category:category},...(data.transactions)]
             sortedByDate.sort(function(a,b){
                 return new Date(b.date) - new Date(a.date)
@@ -118,10 +131,11 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
         setSumShort(false)
         setDateShort(false)
         setCategoryShort(false)
+        setInvalidSum(false)
     }
 
 /*--------------- Error Box Element For Incorrect User Inputs ---------------*/
-    const errorBox = (purchaseShort || sumShort || dateShort || categoryShort) ?
+    const errorBox = (purchaseShort || sumShort || dateShort || categoryShort || invalidSum) ?
         <div className="error-box">
             <div className="display-flex-between">
                 <p className="error-title">Error</p>
@@ -129,10 +143,10 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
             </div>
             {purchaseShort && <p className="error-text">Please Enter A Valid Purchase</p>}
             {sumShort && <p className="error-text">Please Enter A Valid Sum</p>}
-            {dateShort && <p className="error-text">Please Select A Date</p>}
+            {dateShort && <p className="error-text">Please Select A Valid Date</p>}
             {categoryShort && <p className="error-text">Please Select A Category</p>}
+            {invalidSum && <p className="error-text">Please Enter A Sum {`>`} 0</p>}
         </div> : null
-
 /*--------------- Top Row Account Balances ---------------*/
     const accountBalances = 
         <div className="account-balances">
@@ -194,13 +208,13 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
 /*--------------- Recent Transactions Grid ---------------*/
     const recentTransactions = 
         <div className="dashboard-recent-transactions-container">
-            <h3 className="recent-transactions-title">Recent Transactions</h3>
-            <div className="recent-transactions-grid-titles-container">
-                <div className="recent-transactions-grid-title">Type</div>
-                <div className="recent-transactions-grid-title">Purpose</div>
-                <div className="recent-transactions-grid-title">Category</div>
-                <div className="recent-transactions-grid-title">Sum</div>
-                <div className="recent-transactions-grid-title border-right">Date</div>
+            <h3 className="dashboard-recent-transactions-title">Recent Transactions</h3>
+            <div className="dashboard-recent-transactions-grid-titles-container">
+                <div className="dashboard-recent-transactions-grid-title">Type</div>
+                <div className="dashboard-recent-transactions-grid-title">Purpose</div>
+                <div className="dashboard-recent-transactions-grid-title">Category</div>
+                <div className="dashboard-recent-transactions-grid-title">Sum</div>
+                <div className="dashboard-recent-transactions-grid-title border-right">Date</div>
             </div>
             {transactionElements}
         </div>
@@ -214,7 +228,12 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
                 <h1 className="purchase-input-text">Purchase:</h1>
                 <input 
                     className="purchase-input-field"
-                    onChange={(event) => {setPurchase(event.target.value)}}
+                    onChange={(event) => {
+                        const inputValue = event.target.value;
+                        if (inputValue.length <= 10) {
+                          setPurchase(inputValue.slice(0, 10));
+                        }
+                    }}                    
                     value={purchase}
                 />
             </div>
@@ -224,8 +243,14 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
                     className="expenditure-sum-input-field"
                     type="number"
                     onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
-                    onChange={(event) => {setSum(event.target.value)}}
                     value={sum}
+                    onChange={(event) => {
+                        const inputValue = event.target.value;
+                        const regex = /^(?!0\d)\d*(\.\d{0,2})?$/;
+                        if (inputValue === '' || (regex.test(inputValue) && parseFloat(inputValue) <= 10000000)) {
+                            setSum(inputValue);
+                        }
+                    }}
                 />
             </div>
             <div className="expenditure-date-input"> 

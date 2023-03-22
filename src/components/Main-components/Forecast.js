@@ -3,13 +3,26 @@ import Plot from 'react-plotly.js';
 import moment from 'moment';
 import '../../css/Forecast.css';
 
-function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate, arrow, collapsed}) {
+function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate, arrow, collapsed, currencySymbol}) {
     const [portfolioValue, setPortfolioValue] = useState([])
     const [portfolioXValues, setPortfolioXValues] = useState([])
     const [nextPrices, setNextPrices] = useState([])
     const [dateArray, setDateArray] = useState([])
+    const [isMobile, setIsMobile] = useState(false)
+ 
+/*------------ Determine If Screen Resembles A Mobile ------------*/
+    const handleResize = () => {
+      if (window.innerWidth < 800) {
+          setIsMobile(true)
+      } else {
+          setIsMobile(false)
+      }
+    }
 
-
+    useEffect(() => {
+        handleResize()
+        window.addEventListener("resize", handleResize)
+    })
 /*------------ Calculate Portfolio Value For Each Day And Perform Polynomial Regression ------------*/
     useEffect(() => {
         if(BTCDailyData && ETHDailyData && BNBDailyData && data){
@@ -18,53 +31,66 @@ function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate, a
             }
         }
         // Define helper function to fit a polynomial regression model to the data
-        function polynomialRegression(x, y, degree) {
+        function polynomialRegression(x, y, maxDegree) {
+            let degree = 1;
+            let bestCoefficients = null;
+            let bestError = Infinity;
+          
+            while (degree <= maxDegree) {
+              const coefficients = [];
+              for (let i = 0; i <= degree; i++) {
+                coefficients.push(
+                  x.reduce((acc, _, k) => acc + (x[k] ** i) * y[k], 0)
+                );
+              }
+              const matrix = [];
+              for (let i = 0; i <= degree; i++) {
+                matrix.push([]);
+                for (let j = 0; j <= degree; j++) {
+                  matrix[i].push(x.reduce((acc, _, k) => acc + (x[k] ** (i + j)), 0));
+                }
+                matrix[i].push(coefficients[i]);
+              }
+          
+              // Solve the system of linear equations using Gaussian elimination
+              for (let i = 0; i < degree; i++) {
+                for (let j = i + 1; j <= degree; j++) {
+                  const c = matrix[j][i] / matrix[i][i];
+                  for (let k = i + 1; k <= degree + 1; k++) {
+                    matrix[j][k] -= c * matrix[i][k];
+                  }
+                }
+              }
+              const coefficientsVector = new Array(degree + 1);
+              for (let i = degree; i >= 0; i--) {
+                let sum = 0;
+                for (let j = i + 1; j <= degree; j++) {
+                  sum += matrix[i][j] * coefficientsVector[j];
+                }
+                coefficientsVector[i] = (matrix[i][degree + 1] - sum) / matrix[i][i];
+              }
+          
+              // Evaluate the model on the training data and compute the error
+              const predictions = x.map((xi) =>
+                coefficientsVector.reduce((acc, ci, i) => acc + ci * xi ** i, 0)
+              );
+              const error = y.reduce((acc, yi, i) => acc + (yi - predictions[i]) ** 2, 0);
+          
+              // Update the best coefficients if the error is lower
+              if (error < bestError) {
+                bestCoefficients = coefficientsVector;
+                bestError = error;
+              }
+          
+              degree++;
+            }
+          
             const results = {};
-
-            const coefficients = [];
-            for (let i = 0; i < degree + 1; i++) {
-                coefficients.push(Array.from({ length: degree + 1 }, (_, j) => x.reduce((acc, _, k) => acc + (x[k] ** (i + j)), 0)));
+            for (let i = 0; i <= maxDegree; i++) {
+              results[i] = bestCoefficients[i] || 0;
             }
-
-            const matrix = coefficients.map((row, i) => Array.from({ length: degree + 2 }, (_, j) => j === degree + 1 ? y.reduce((acc, _, k) => acc + (y[k] * x[k] ** i), 0) : row[j]));
-
-            for (let i = 0; i < degree + 1; i++) {
-                let maxElement = matrix[i][i];
-                let maxRow = i;
-                for (let j = i + 1; j < degree + 1; j++) {
-                    if (Math.abs(matrix[j][i]) > Math.abs(maxElement)) {
-                        maxElement = matrix[j][i];
-                        maxRow = j;
-                    }
-                }
-                for (let j = i; j < degree + 2; j++) {
-                    const tmp = matrix[maxRow][j];
-                    matrix[maxRow][j] = matrix[i][j];
-                    matrix[i][j] = tmp;
-                }
-                for (let j = i + 1; j < degree + 1; j++) {
-                    const c = -matrix[j][i] / matrix[i][i];
-                    for (let k = i; k < degree + 2; k++) {
-                        if (i === k) {
-                            matrix[j][k] = 0;
-                        } else {
-                            matrix[j][k] += c * matrix[i][k];
-                        }
-                    }
-                }
-            }
-
-            for (let i = degree; i >= 0; i--) {
-                let a = matrix[i][degree + 1] / matrix[i][i];
-                for (let j = i - 1; j >= 0; j--) {
-                    matrix[j][degree + 1] -= matrix[j][i] * a;
-                    matrix[j][i] = 0;
-                }
-                results[i] = a;
-            }
-
             return results;
-        }
+          }
         // Define helper function to evaluate a polynomial at a given point
         function evaluatePolynomial(x, coefficients) {
             let result = 0;
@@ -92,13 +118,13 @@ function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate, a
             const normalizedOutput = output.map((y) => (y - outputMean) / outputStd);
 
             // Fit a polynomial regression model to the normalized data
-            const degree = 3;
+            const degree = 10;
             const modelCoefficients = polynomialRegression(normalizedInput, normalizedOutput, degree);
 
             // Use the polynomial regression model to predict the next 5 stock prices
             const numPredictions = 5;
             let lastInput = prices[prices.length - 1];
-            nextPrices.push(portfolioValue[29])
+            nextPrices.push(portfolioValue[29])//so the 2 line charts link
             for (let i = 0; i < numPredictions; i++) {
                 // Normalize the input value
                 const normalizedInputValue = (lastInput - inputMean) / inputStd;
@@ -169,7 +195,7 @@ function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate, a
                         name: "Forecast",
                     },
                 ]}
-                layout={{width:700,height:400,title:"Portfolio Performance + Forecast",paper_bgcolor:"#fff",plot_bgcolor:"#fff",xaxis:{title:"Date"},yaxis:{title:"Price"}}}
+                layout={{width:(isMobile ? 350 : 700),height:(isMobile ? 250 : 400),title:"Portfolio Performance + Forecast",paper_bgcolor:"#fff",plot_bgcolor:"#fff",xaxis:{title:"Date"},yaxis:{title:"Value (" + currencySymbol+")"}}}
                 
             />
         </div>

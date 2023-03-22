@@ -15,62 +15,69 @@ function History({data, round2dp, investmentsValue, currencySymbol, arrow, colla
         const transactionsArray = (data.transactions).slice(0, 50)
         let result = transactionsArray.filter(transaction => category === "All" ? transaction : (transaction.category === category))
         result = result.filter(transaction => type === "All" ? transaction : (transaction.type === type))
-        transactionElements = result.map(transaction => {
-            let bgColor = ""
-            if(transaction.category === "Shopping"){
-                bgColor="#014F86"
-            }
-            else if(transaction.category === "Food&Drinks"){
-                bgColor="#2A6f97"
-            }
-            else if(transaction.category === "Bills&Utilities"){
-                bgColor="#2C7DA0"
-            }
-            else if(transaction.category === "Others"){
-                bgColor="#468FAF"
-            }
-            else if(transaction.category === "Sell"){
-                bgColor="#ff8fa3"
-            }
-            else{
-                bgColor="#38B000"
-            }
-            let typeColor=""
-            if(transaction.type === "Expenditure"){
-                typeColor="#ff8fa3"
-            }
-            else{
-                typeColor="#38B000"
-            }
-            return(
-            <div className="transactions-grid" key={nanoid()}>
-                <div className="transactions-grid-item" key={nanoid()}
-                    style={{backgroundColor:typeColor}}
-                >{transaction.type}</div>
-                <div className="transactions-grid-item transactions-grid-item-purpose" key={nanoid()}>{transaction.purchase ? transaction.purchase : (transaction.source ? transaction.source : transaction.asset)}</div>
-                <div className="transactions-grid-item transactions-grid-item-category" key={nanoid()}
-                    style={{backgroundColor:bgColor}}  
-                >{transaction.category ? transaction.category : "Revenue"}</div>
-                <div className="transactions-grid-item transactions-grid-item-sum" key={nanoid()}>{currencySymbol}{transaction.sum}</div>
-                <div className="transactions-grid-item border-right" key={nanoid()}>{transaction.date}</div>
-            </div>
-            )
-        })
+        if(result.length > 0)
+        {
+            transactionElements = result.map(transaction => {
+                let bgColor = ""
+                if(transaction.category === "Shopping"){
+                    bgColor="#014F86"
+                }
+                else if(transaction.category === "Food&Drinks"){
+                    bgColor="#2A6f97"
+                }
+                else if(transaction.category === "Bills&Utilities"){
+                    bgColor="#2C7DA0"
+                }
+                else if(transaction.category === "Others"){
+                    bgColor="#468FAF"
+                }
+                else if(transaction.category === "Sell"){
+                    bgColor="#ff8fa3"
+                }
+                else{
+                    bgColor="#38B000"
+                }
+                let typeColor=""
+                if(transaction.type === "Expenditure"){
+                    typeColor="#ff8fa3"
+                }
+                else{
+                    typeColor="#38B000"
+                }
+                return(
+                <div className="history-transactions-grid" key={nanoid()}>
+                    <div className="history-transactions-grid-item" key={nanoid()}
+                        style={{backgroundColor:typeColor}}
+                    >{transaction.type}</div>
+                    <div className="history-transactions-grid-item transactions-grid-item-purpose" key={nanoid()}>{transaction.purchase ? transaction.purchase : (transaction.source ? transaction.source : transaction.asset)}</div>
+                    <div className="history-transactions-grid-item transactions-grid-item-category" key={nanoid()}
+                        style={{backgroundColor:bgColor}}  
+                    >{transaction.category ? transaction.category : "Revenue"}</div>
+                    <div className="history-transactions-grid-item transactions-grid-item-sum" key={nanoid()}>{currencySymbol}{transaction.sum}</div>
+                    <div className="history-transactions-grid-item border-right" key={nanoid()}>{transaction.date}</div>
+                </div>
+                )
+            })
+        }
+        else{
+            transactionElements = 
+            <h1 className="no-transaction-text">No Transactions Yet</h1>
+        }
     }
     getTransactionsTable()
 
 /*--------------- Recent Transactions Grid ---------------*/
     const recentTransactions = 
-        <div className="recent-transactions-container">
-            <h3 className="recent-transactions-title">Recent Transactions</h3>
-            <div className="recent-transactions-grid-titles-container">
-                <div className="recent-transactions-grid-title">Type</div>
-                <div className="recent-transactions-grid-title">Purpose</div>
-                <div className="recent-transactions-grid-title">Category</div>
-                <div className="recent-transactions-grid-title">Sum</div>
-                <div className="recent-transactions-grid-title border-right">Date</div>
+        <div className="history-recent-transactions-container">
+            <h3 className="history-recent-transactions-title">Recent Transactions</h3>
+            <div className="history-recent-transactions-grid-titles-container">
+                <div className="history-recent-transactions-grid-title">Type</div>
+                <div className="history-recent-transactions-grid-title">Purpose</div>
+                <div className="history-recent-transactions-grid-title">Category</div>
+                <div className="history-recent-transactions-grid-title">Sum</div>
+                <div className="history-recent-transactions-grid-title border-right">Date</div>
             </div>
-            <div className="transaction-elements">
+            <div className="history-transaction-elements">
                 {transactionElements}
             </div>
         </div>
@@ -148,14 +155,12 @@ function History({data, round2dp, investmentsValue, currencySymbol, arrow, colla
                     {arrow}
                     <h1 className="history-title">History</h1>
                 </div>
-                <div id="" style={{overflow:"auto"}}>
                 <div className="history-boxes-container">
                     {recentTransactions}
                     <div className="history-values-container">
                         {viewBalances}
                         {filterGrid}
                     </div>
-                </div>
                 </div>
             </div>
         </main>

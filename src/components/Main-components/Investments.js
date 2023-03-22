@@ -12,6 +12,24 @@ import CloseIcon from '@mui/icons-material/Close';
 
 function Investments({todaysDate ,data, coins, round2dp, investmentsValue, currencySymbol, BTCDailyData, ETHDailyData, 
                     BNBDailyData, arrow, collapsed}) {
+
+const [isMobile, setIsMobile] = useState(true)
+ 
+//choose the screen size 
+const handleResize = () => {
+  if (window.innerWidth < 780) {
+      setIsMobile(true)
+  } else {
+      setIsMobile(false)
+  }
+}
+// create an event listener
+useEffect(() => {
+    handleResize()
+    window.addEventListener("resize", handleResize)
+})
+
+// finally you can render components conditionally if isMobile is True or False 
 /*---------------------- Initialise State Variables ----------------------*/    
     const [amount, setAmount] = useState(0)
     const [currency, setCurrency] = useState("BTC")
@@ -25,7 +43,6 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
     const [insufficientFunds,setInsufficientFunds] = useState(false)
     const [insufficientAssets,setInsufficientAssets] = useState(false)
     const [amountEntered,setAmountEntered] = useState(false)
-    console.log(data)
 /*---------------------- Collect And Store Appropriate Asset Price Values ----------------------*/
     useEffect(() => {
         const doit = async () => {
@@ -154,7 +171,8 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
                         marker: {color:"#013A63"},
                     },
                 ]}
-                layout={{width:700,height:400,title:asset + " Daily Chart",paper_bgcolor:"#fff",plot_bgcolor:"#fff",xaxis:{title:"Date"},yaxis:{title:[asset]+" (" + currencySymbol+")"}}}
+                layout={{width:(isMobile ? 350 : 700),height:(isMobile ? 250 : 400),title:asset + " Daily Chart",paper_bgcolor:"#fff",plot_bgcolor:"#fff",xaxis:{title:"Date"},yaxis:{title:[asset]+" (" + currencySymbol+")"}}}
+                config={{responsive:true}}
             />
             <div className="asset-choice">
                     <select id="asset" name="asset" className="asset-choice-input" value={asset}
@@ -170,10 +188,13 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
 /*--------------- Preview Investment Message ---------------*/
     const investmentMessage = (currency.length && buySell.length && amount > 0) ? 
         <div>
-            <p className = "investment-confirmation-text" 
-                style={(buySell === "Buy") ? {color:"#42f55d"} : {color:"#f25d3f"}}>
+            <h1 className = "investment-confirmation-text" 
+                style={(buySell === "Buy") ? 
+                    {color:"#32DF4C", backgroundColor: '#c7f9cc', borderColor:"#32DF4C"} : 
+                    {color:"#922c2b", backgroundColor: '#ffdce0', borderColor:"#922c2b"}}
+            >
                 {buySell} {amount} {currency} for {currencySymbol}{price}
-            </p>
+            </h1>
         </div> : null
 
 /*--------------- Error Box Element For Incorrect User Inputs ---------------*/
@@ -286,9 +307,14 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
                     className="investment-amount-input-field"
                     type="number"
                     onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
-                    onChange={(event) => {setAmount(event.target.value)}}
+                    onChange={(event) => {
+                        const inputValue = event.target.value;
+                        const regex = /^(?!0\d)\d*(\.\d{0,4})?$/;
+                        if (inputValue === '' || (regex.test(inputValue) && parseFloat(inputValue) <= 100)) {
+                            setAmount(inputValue);
+                        }
+                    }}             
                     value={amount}
-                    maxLength="11"
                 />
             </div>
             {investmentMessage}
@@ -313,7 +339,7 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
                     <h1 className="investments-title">Investments</h1>
                 </div>
                 <div className="display-flex">
-                    <div style={{height:"580px"}}>
+                    <div className="chart-and-asset-values"style={{height:(isMobile ? "440px" : "580px")}}>
                         {currentAssetPrices}
                         {assetChart}
                     </div>  

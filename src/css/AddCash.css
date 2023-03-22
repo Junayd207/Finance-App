@@ -35,7 +35,7 @@
     background: var(--blue-shade-7);
     border-radius:10px;
     padding:0;
-    margin:20px;
+    margin:20px 20px 20px 0;
 }
 
 .addCash-function-title{
@@ -119,13 +119,11 @@
     transform: scale(0.95);
 }
 
-
-
 .addcash-assets-overview{
     background:var(--blue-shade-7);
-    margin:20px;
-    margin-left:0;
+    margin:20px 0;
     border-radius: 10px;
+    height:243px;
 }
 
 .assets-overview-title-container{
@@ -173,4 +171,29 @@
     padding:0;
     margin:0;
     font-size:16px;
+}
+
+@media (max-width: 650px){
+    .addCash-boxes-container{
+        display:flex;
+        flex-direction:column;
+        align-items: center;
+        margin:0;
+    }
+
+    .addCash-functions-container{
+        order:2;
+    }
+
+    .addCash-function{
+        margin:0;
+    }
+
+    .addcash-assets-overview{
+        width:313.24px;
+    }
+
+    .assets-overview-title-container{
+        margin:0;
+    }
 }
