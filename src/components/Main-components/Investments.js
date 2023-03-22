@@ -14,7 +14,6 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
                     BNBDailyData, arrow, collapsed}) {
 
 const [isMobile, setIsMobile] = useState(true)
- 
 //choose the screen size 
 const handleResize = () => {
   if (window.innerWidth < 780) {
@@ -43,6 +42,8 @@ useEffect(() => {
     const [insufficientFunds,setInsufficientFunds] = useState(false)
     const [insufficientAssets,setInsufficientAssets] = useState(false)
     const [amountEntered,setAmountEntered] = useState(false)
+    console.log(BTCYValues)
+
 /*---------------------- Collect And Store Appropriate Asset Price Values ----------------------*/
     useEffect(() => {
         const doit = async () => {

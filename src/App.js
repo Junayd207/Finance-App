@@ -24,7 +24,7 @@ function App() {
     const [BTCDailyData, setBTCDailyData] = useState([]);
     const [ETHDailyData, setETHDailyData] = useState([]);
     const [BNBDailyData, setBNBDailyData] = useState([]);
-    const [currencySymbol, setCurrencySymbol] = useState("")
+    const [currencySymbol, setCurrencySymbol] = useState("GBP")
     const [data, setData] = useState({transactions:[], currencySymbol:"",})
     const [monthlyShopping, setMonthlyShopping] = useState(0)
     const [monthlyFoodDrinks, setMonthlyFoodDrinks] = useState(0)
@@ -79,7 +79,7 @@ function App() {
         const getData = async () => {
             try {
               const res = await axios.get(
-                `http://api.coingecko.com/api/v3/coins/markets?vs_currency=${data.currencySymbol}&order=market_cap_desc&per_page=4&page=1&sparkline=true`
+                `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${data.currencySymbol}&order=market_cap_desc&per_page=4&page=1&sparkline=true`
               );
               setCoins(res.data);
             } catch (error) {
@@ -110,19 +110,21 @@ function App() {
                 console.error(error);
             }
         };
-        if(data.currencySymbol){
-            if(data.currencySymbol === "GBP")
-                setCurrencySymbol("£")
-            else if(data.currencySymbol === "USD")
-                setCurrencySymbol("$")
-            else if(data.currencySymbol === "EUR")
-                setCurrencySymbol("€")
+        if(data && data.currencySymbol){
             getData()
         }  
     }, [data.currencySymbol]);
-    console.log(coins[0])
 
-
+    useEffect(() => {
+        if (data && data.currencySymbol) {
+            if (data.currencySymbol === "GBP")
+                setCurrencySymbol("£");
+            else if (data.currencySymbol === "USD")
+                setCurrencySymbol("$");
+            else if (data.currencySymbol === "EUR")
+                setCurrencySymbol("€");
+        }
+    },[data.currencySymbol]);
 /*--------------------- Calculate Total Value Of Investments ---------------------*/
     let investmentsValue = 0;
     if(data){investmentsValue = (round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0) + 
@@ -132,7 +134,7 @@ function App() {
 /*-------------- Calculate This Months Expenses For Each Catergory --------------*/
     let firstMonthDate = todaysDate.substring(0,8) + "01"
     useEffect(() => {
-        if(data.transactions){
+        if(data && data.transactions){
             const transactionsArray = (data.transactions)
             let shoppingArray = transactionsArray.filter(transaction => transaction.category === "Shopping" && transaction.date >= firstMonthDate)
             let foodDrinksArray = transactionsArray.filter(transaction => transaction.category === "Food&Drinks" && transaction.date >= firstMonthDate)
@@ -169,7 +171,7 @@ function App() {
             setMonthlyCashAdded(totalCashAdded)
             setMonthlyNetInvestment(totalInvestmentsMade - totalInvestmentsSold)
         }
-    },[data.transactions])
+    },[data])
 
 /*--------------------Check if screen resolution resembles a mobile-----------------------*/
 const [isMobile, setIsMobile] = useState(true)

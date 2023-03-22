@@ -22,10 +22,15 @@ function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate, a
     useEffect(() => {
         handleResize()
         window.addEventListener("resize", handleResize)
-    })
+    },[])
 /*------------ Calculate Portfolio Value For Each Day And Perform Polynomial Regression ------------*/
     useEffect(() => {
         if(BTCDailyData && ETHDailyData && BNBDailyData && data){
+            if(data.BTC + data.ETH + data.BNB === 0){
+                for (let i = 0; i < 31;i++){
+                    portfolioValue.push(0)
+                }
+            }
             for (let i = 0; i < 31;i++){
                 portfolioValue.push(data.BTC * BTCDailyData[i][1] + data.ETH * ETHDailyData[i][1] + data.BNB * BNBDailyData[i][1])
             }
@@ -33,7 +38,7 @@ function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate, a
         // Define helper function to fit a polynomial regression model to the data
         function polynomialRegression(x, y, maxDegree) {
             let degree = 1;
-            let bestCoefficients = null;
+            let bestCoefficients = new Array(maxDegree + 1).fill(0);;
             let bestError = Infinity;
           
             while (degree <= maxDegree) {
