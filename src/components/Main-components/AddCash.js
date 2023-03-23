@@ -63,8 +63,7 @@ function resetErrorValues(){
             {sumShort && <p className="error-text">Please Enter A Valid Sum</p>}
             {dateShort && <p className="error-text">Please Select A Valid Date</p>}
         </div> : null
-console.log(sum)
-console.log(typeof sum)
+
  /*--------------- Add Cash Input Box ---------------*/
     const addCashInput = 
     <div className="addCash-functions-container">

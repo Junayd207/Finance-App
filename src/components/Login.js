@@ -13,6 +13,7 @@ function Login() {
     const [invalidEmail, setInvalidEmail] = useState(false)
     const [invalidUser, setInvalidUser] = useState(false)
     const [wrongPassword, setWrongPassword] = useState(false)
+    const [tooManyAttempts, setTooManyAttempts] = useState(false)
 
 /*---------------------- Signin Function ----------------------*/    
     const signIn = async () =>{
@@ -33,6 +34,9 @@ function Login() {
                         if (error.code === "auth/wrong-password") {
                             setWrongPassword(true)
                         }
+                        if (error.code === "auth/too-many-requests") {
+                            setTooManyAttempts(true)
+                        }
                         console.error(error)
                     })
             } catch(error) {
@@ -46,10 +50,11 @@ function Login() {
         setInvalidEmail(false)
         setInvalidUser(false)
         setWrongPassword(false)
+        setTooManyAttempts(false)
     }
 
 /*---------------------- Error Box Element For Incorrect User Inputs ----------------------*/    
-    const errorBox = (invalidUser || wrongPassword || invalidEmail) ?
+    const errorBox = (invalidUser || wrongPassword || invalidEmail || tooManyAttempts) ?
         <div className="error-box">
             <div className="display-flex-between">
                 <p className="error-title">Error</p>
@@ -58,6 +63,8 @@ function Login() {
             {invalidEmail && <p className="error-text">Invalid Email</p>}
             {invalidUser && <p className="error-text">User Not Found</p>}
             {wrongPassword && <p className="error-text">Password Incorrect, Please Try Again</p>}
+            {tooManyAttempts && <p className="error-text">Too Many Attempts, Please Try Again Later</p>}
+
         </div> : null
 
 /*---------------------- Return (Render Elements) ----------------------*/    

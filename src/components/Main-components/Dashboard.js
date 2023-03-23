@@ -28,53 +28,59 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
     var transactionElements = []
     let transactionsArray =[]
     const getTransactionsTable = async() => {
-        if(data.transactions)
-            transactionsArray = (data.transactions).slice(0, 9)
-
-        if(transactionsArray.length > 0){
-            transactionElements = transactionsArray.map(transaction => {
-                let bgColor = ""
-                if(transaction.category === "Shopping"){
-                    bgColor="#014F86"
-                }
-                else if(transaction.category === "Food&Drinks"){
-                    bgColor="#2A6f97"
-                }
-                else if(transaction.category === "Bills&Utilities"){
-                    bgColor="#2C7DA0"
-                }
-                else if(transaction.category === "Others"){
-                    bgColor="#468FAF"
-                }
-                else{
-                    bgColor="#38B000"
-                }
-                let typeColor=""
-                if(transaction.type === "Expenditure"){
-                    typeColor="#ff8fa3"
-                }
-                else{
-                    typeColor="#38B000"
-                }
-                return(
-                <div className="transactions-grid" key={nanoid()}>
-                    <div className="transactions-grid-item" key={nanoid()}
-                        style={{backgroundColor:typeColor}}
-                    >{transaction.type}</div>
-                    <div className="transactions-grid-item transactions-grid-item-purpose" key={nanoid()}>{transaction.purchase ? transaction.purchase : (transaction.source ? transaction.source : transaction.asset)}</div>
-                    <div className="transactions-grid-item transactions-grid-item-category" key={nanoid()}
-                        style={{backgroundColor:bgColor}}  
-                    >{transaction.category ? transaction.category : "Revenue"}</div>
-                    <div className="transactions-grid-item transactions-grid-item-sum" key={nanoid()}>{currencySymbol}{transaction.sum}</div>
-                    <div className="transactions-grid-item border-right" key={nanoid()}>{transaction.date}</div>
-                </div>
-                )
-            })
+        if (data && data.transactions) {
+                transactionsArray = (data.transactions).slice(0, 9)
+            if(transactionsArray.length > 0){
+                transactionElements = transactionsArray.map(transaction => {
+                    let bgColor = ""
+                    if(transaction.category === "Shopping"){
+                        bgColor="#014F86"
+                    }
+                    else if(transaction.category === "Food&Drinks"){
+                        bgColor="#2A6f97"
+                    }
+                    else if(transaction.category === "Bills&Utilities"){
+                        bgColor="#2C7DA0"
+                    }
+                    else if(transaction.category === "Others"){
+                        bgColor="#468FAF"
+                    }
+                    else{
+                        bgColor="#38B000"
+                    }
+                    let typeColor=""
+                    if(transaction.type === "Expenditure"){
+                        typeColor="#ff8fa3"
+                    }
+                    else{
+                        typeColor="#38B000"
+                    }
+                    return(
+                    <div className="transactions-grid" key={nanoid()}>
+                        <div className="transactions-grid-item" key={nanoid()}
+                            style={{backgroundColor:typeColor}}
+                        >{transaction.type}</div>
+                        <div className="transactions-grid-item transactions-grid-item-purpose" key={nanoid()}>{transaction.purchase ? transaction.purchase : (transaction.source ? transaction.source : transaction.asset)}</div>
+                        <div className="transactions-grid-item transactions-grid-item-category" key={nanoid()}
+                            style={{backgroundColor:bgColor}}  
+                        >{transaction.category ? transaction.category : "Revenue"}</div>
+                        <div className="transactions-grid-item transactions-grid-item-sum" key={nanoid()}>{currencySymbol}{transaction.sum}</div>
+                        <div className="transactions-grid-item border-right" key={nanoid()}>{transaction.date}</div>
+                    </div>
+                    )
+                })
+            }
+            else{
+                transactionElements =
+                <h1 className="no-transaction-text">No Transactions Yet</h1>
+            }
         }
         else{
-            transactionElements =
-            <h1 className="no-transaction-text">No Transactions Yet</h1>
+            transactionElements = (
+                <h1 className="no-transaction-text">No Transactions Yet</h1>
+            );
         }
+
     }
     getTransactionsTable()
 
@@ -157,11 +163,11 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
                 </div>
                 <div className="assets-values-container">
                     <p className="assets-text">Total:</p>
-                    <p className="assets-text">{currencySymbol}{round2dp(data.balance + investmentsValue)}</p>
+                    <p className="assets-text">{currencySymbol}{round2dp((data && data.balance ? data.balance : 0) + investmentsValue)}</p>
                 </div>
                 <div className="assets-values-container">
                     <p className="assets-text">Savings:</p>
-                    <p className="assets-text">{currencySymbol}{round2dp(data.savings)}</p>
+                    <p className="assets-text">{currencySymbol}{round2dp((data && data.savings ? data.savings : 0))}</p>
                 </div>
                 <div className="assets-values-container">
                     <p className="assets-text">Investments:</p>

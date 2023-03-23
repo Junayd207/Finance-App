@@ -24,7 +24,7 @@ function App() {
     const [BTCDailyData, setBTCDailyData] = useState([]);
     const [ETHDailyData, setETHDailyData] = useState([]);
     const [BNBDailyData, setBNBDailyData] = useState([]);
-    const [currencySymbol, setCurrencySymbol] = useState("GBP")
+    const [currencySymbol, setCurrencySymbol] = useState(null)
     const [data, setData] = useState({transactions:[], currencySymbol:"",})
     const [monthlyShopping, setMonthlyShopping] = useState(0)
     const [monthlyFoodDrinks, setMonthlyFoodDrinks] = useState(0)
@@ -39,8 +39,6 @@ function App() {
                         {collapsed && <ArrowForwardIosIcon/>}
                         {!collapsed && <ArrowBackIosNewIcon/>}
                     </div>
-
-
 /*--------------- Calculate Todays Date In YY-MM-DD Format ---------------*/
     const d = new Date()
     let todaysDate = ""
@@ -57,9 +55,13 @@ function App() {
             todaysDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate()
     }
     
-/*-------------------- Function To Round Number To 2DP --------------------*/
+/*-------------------- Function To Round Number To 2DP/4DP --------------------*/
     function round2dp(num){
         return Math.round(num*100) / 100
+    }
+
+    function round4dp(num){
+        return Math.round(num*10000) / 10000
     }
 
 /*------------------ useEffect Hook To Collect User Data ------------------*/
@@ -74,8 +76,24 @@ function App() {
         return() => unsubscribe()
         })
     },[auth.currentUser])
+
+    useEffect(() => {
+        if (data && data.currencySymbol) {
+            if(data.currencySymbol === "GBP" && currencySymbol !==  "£"){
+                setCurrencySymbol(data.currencySymbol);
+            }
+            else if(data.currencySymbol === "USD" && currencySymbol !==  "$"){
+                setCurrencySymbol(data.currencySymbol);
+            }
+            else if(data.currencySymbol === "EUR" && currencySymbol !==  "€"){
+                setCurrencySymbol(data.currencySymbol);
+            }
+        }
+    }, [data]);
+
 /*useEffect Hook To Collect API Price Data With Dependancy To Refresh If Currency(£$€) Changes*/
     useEffect(() => {
+        console.log("im the useeffect")
         const getData = async () => {
             try {
               const res = await axios.get(
@@ -113,7 +131,7 @@ function App() {
         if(data && data.currencySymbol){
             getData()
         }  
-    }, [data.currencySymbol]);
+    }, [currencySymbol]);
 
     useEffect(() => {
         if (data && data.currencySymbol) {
@@ -124,7 +142,7 @@ function App() {
             else if (data.currencySymbol === "EUR")
                 setCurrencySymbol("€");
         }
-    },[data.currencySymbol]);
+    },[currencySymbol]);
 /*--------------------- Calculate Total Value Of Investments ---------------------*/
     let investmentsValue = 0;
     if(data){investmentsValue = (round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0) + 
@@ -188,7 +206,6 @@ const handleResize = () => {
 useEffect(() => {
   window.addEventListener("resize", handleResize)
 })
-
 /*---------------- Depending On URL, Render Correct Website Routes ----------------*/
 return (
     <div>
@@ -215,7 +232,7 @@ return (
                 <Sidebar collapsed={collapsed}/>
                 <Investments todaysDate={todaysDate} data={data} coins={coins} round2dp={round2dp} investmentsValue={investmentsValue} 
                 currencySymbol={currencySymbol} BTCDailyData = {BTCDailyData.prices} ETHDailyData = {ETHDailyData.prices} 
-                BNBDailyData = {BNBDailyData.prices} arrow={arrow} collapsed={collapsed}/>
+                BNBDailyData = {BNBDailyData.prices} arrow={arrow} collapsed={collapsed} round4dp={round4dp}/>
             </div>
         }/>
         <Route path="/forecast" element={

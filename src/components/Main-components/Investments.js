@@ -11,7 +11,7 @@ import SsidChartIcon from '@mui/icons-material/SsidChart';
 import CloseIcon from '@mui/icons-material/Close';
 
 function Investments({todaysDate ,data, coins, round2dp, investmentsValue, currencySymbol, BTCDailyData, ETHDailyData, 
-                    BNBDailyData, arrow, collapsed}) {
+                    BNBDailyData, arrow, collapsed, round4dp}) {
 
 const [isMobile, setIsMobile] = useState(true)
 //choose the screen size 
@@ -27,8 +27,6 @@ useEffect(() => {
     handleResize()
     window.addEventListener("resize", handleResize)
 })
-
-// finally you can render components conditionally if isMobile is True or False 
 /*---------------------- Initialise State Variables ----------------------*/    
     const [amount, setAmount] = useState(0)
     const [currency, setCurrency] = useState("BTC")
@@ -42,7 +40,6 @@ useEffect(() => {
     const [insufficientFunds,setInsufficientFunds] = useState(false)
     const [insufficientAssets,setInsufficientAssets] = useState(false)
     const [amountEntered,setAmountEntered] = useState(false)
-    console.log(BTCYValues)
 
 /*---------------------- Collect And Store Appropriate Asset Price Values ----------------------*/
     useEffect(() => {
@@ -103,7 +100,7 @@ useEffect(() => {
             if(buySell === "Buy")
             {
                 await updateDoc(doc(db,"users",auth.currentUser.uid), {
-                    [currency]: increment(round2dp(amount)),
+                    [currency]: increment(round4dp(amount)),
                     balance: increment(round2dp(-price)),
                     savings: increment(round2dp(-price)),
                     transactions: sortedByDate,
@@ -111,7 +108,7 @@ useEffect(() => {
             }
             else{
                 await updateDoc(doc(db,"users",auth.currentUser.uid), {
-                    [currency]: increment(round2dp(-amount)),
+                    [currency]: increment(round4dp(-amount)),
                     balance: increment(round2dp(price)),
                     savings: increment(round2dp(price)),
                     transactions: sortedByDate,
@@ -141,15 +138,15 @@ useEffect(() => {
     let sellableAmount = 0
     if(currency === "BTC" && coins[0]){
         price = round2dp(amount*coins[0].current_price)
-        sellableAmount = round2dp(data.BTC)
+        sellableAmount = round4dp(data.BTC)
     }
     else if(currency === "ETH"){
         price = round2dp(amount*coins[1].current_price)
-        sellableAmount = round2dp(data.ETH)
+        sellableAmount = round4dp(data.ETH)
     }
     else if(currency === "BNB"){
         price = round2dp(amount*coins[3].current_price)
-        sellableAmount = round2dp(data.BNB)
+        sellableAmount = round4dp(data.BNB)
     }
 
 /*---------- Reset User Input Values After Successful Transaction Added ----------*/
@@ -262,15 +259,15 @@ useEffect(() => {
                 <ShowChartIcon/>
             </div>
             <div className="investments-overview-container">
-                <h1 className="investments-text">BTC: {round2dp(data.BTC)}</h1>
+                <h1 className="investments-text">BTC: {round4dp(data.BTC)}</h1>
                 <h1 className="investments-text">{currencySymbol}{round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0))}</h1>
             </div>
             <div className="investments-overview-container">
-                <h1 className="investments-text">ETH: {round2dp(data.ETH)}</h1>
+                <h1 className="investments-text">ETH: {round4dp(data.ETH)}</h1>
                 <h1 className="investments-text">{currencySymbol}{round2dp(data.ETH * (coins[1] ? coins[1].current_price : 0))}</h1>
             </div>
             <div className="investments-overview-container">
-                <h1 className="investments-text">BNB: {round2dp(data.BNB)}</h1>
+                <h1 className="investments-text">BNB: {round4dp(data.BNB)}</h1>
                 <h1 className="investments-text">{currencySymbol}{round2dp(data.BNB * (coins[3] ? coins[3].current_price : 0))}</h1>
             </div>
         </div>
