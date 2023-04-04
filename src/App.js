@@ -33,8 +33,8 @@ function App() {
     const [monthlyCashAdded, setMonthlyCashAdded] = useState(0)
     const [monthlyNetInvestment, setMonthlyNetInvestment] = useState(0)
     const [collapsed, setCollapsed] = useState(true)
-    
-
+    const [isMobile, setIsMobile] = useState(true)
+/*---------------------- Arrow button for sidebar ----------------------*/
     const arrow =   <div className="arrow" style={{ filter: "none", opacity: 1, pointerEvents: "auto" }} onClick={() => setCollapsed(!collapsed)}>
                         {collapsed && <ArrowForwardIosIcon/>}
                         {!collapsed && <ArrowBackIosNewIcon/>}
@@ -54,7 +54,6 @@ function App() {
         else
             todaysDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate()
     }
-    
 /*-------------------- Function To Round Number To 2DP/4DP --------------------*/
     function round2dp(num){
         return Math.round(num*100) / 100
@@ -63,7 +62,6 @@ function App() {
     function round4dp(num){
         return Math.round(num*10000) / 10000
     }
-
 /*------------------ useEffect Hook To Collect User Data ------------------*/
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(() => {
@@ -79,18 +77,19 @@ function App() {
 
     useEffect(() => {
         if (data && data.currencySymbol) {
+            console.log(data.currencySymbol)
+            console.log(currencySymbol)
             if(data.currencySymbol === "GBP" && currencySymbol !==  "£"){
-                setCurrencySymbol(data.currencySymbol);
+                setCurrencySymbol("£");
             }
             else if(data.currencySymbol === "USD" && currencySymbol !==  "$"){
-                setCurrencySymbol(data.currencySymbol);
+                setCurrencySymbol("$");
             }
             else if(data.currencySymbol === "EUR" && currencySymbol !==  "€"){
-                setCurrencySymbol(data.currencySymbol);
+                setCurrencySymbol("€");
             }
         }
     }, [data]);
-
 /*useEffect Hook To Collect API Price Data With Dependancy To Refresh If Currency(£$€) Changes*/
     useEffect(() => {
         console.log("im the useeffect")
@@ -132,23 +131,11 @@ function App() {
             getData()
         }  
     }, [currencySymbol]);
-
-    useEffect(() => {
-        if (data && data.currencySymbol) {
-            if (data.currencySymbol === "GBP")
-                setCurrencySymbol("£");
-            else if (data.currencySymbol === "USD")
-                setCurrencySymbol("$");
-            else if (data.currencySymbol === "EUR")
-                setCurrencySymbol("€");
-        }
-    },[currencySymbol]);
 /*--------------------- Calculate Total Value Of Investments ---------------------*/
     let investmentsValue = 0;
     if(data){investmentsValue = (round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0) + 
                 data.ETH * (coins[1] ? coins[1].current_price : 0) +
                 data.BNB * (coins[3] ? coins[3].current_price : 0)))}
-
 /*-------------- Calculate This Months Expenses For Each Catergory --------------*/
     let firstMonthDate = todaysDate.substring(0,8) + "01"
     useEffect(() => {
@@ -190,21 +177,18 @@ function App() {
             setMonthlyNetInvestment(totalInvestmentsMade - totalInvestmentsSold)
         }
     },[data])
-
 /*--------------------Check if screen resolution resembles a mobile-----------------------*/
-const [isMobile, setIsMobile] = useState(true)
  
-//choose the screen size 
+//Check if screen resembles mobile 
 const handleResize = () => {
-  if (window.innerWidth < 780) {
-      setIsMobile(true)
-  } else {
-      setIsMobile(false)
-  }
+    if (window.innerWidth < 780) 
+        setIsMobile(true)
+    else 
+        setIsMobile(false)
 }
-// create an event listener
+//Event Listener if screen size changes
 useEffect(() => {
-  window.addEventListener("resize", handleResize)
+    window.addEventListener("resize", handleResize)
 })
 /*---------------- Depending On URL, Render Correct Website Routes ----------------*/
 return (

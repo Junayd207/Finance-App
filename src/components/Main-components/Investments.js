@@ -12,21 +12,6 @@ import CloseIcon from '@mui/icons-material/Close';
 
 function Investments({todaysDate ,data, coins, round2dp, investmentsValue, currencySymbol, BTCDailyData, ETHDailyData, 
                     BNBDailyData, arrow, collapsed, round4dp}) {
-
-const [isMobile, setIsMobile] = useState(true)
-//choose the screen size 
-const handleResize = () => {
-  if (window.innerWidth < 780) {
-      setIsMobile(true)
-  } else {
-      setIsMobile(false)
-  }
-}
-// create an event listener
-useEffect(() => {
-    handleResize()
-    window.addEventListener("resize", handleResize)
-})
 /*---------------------- Initialise State Variables ----------------------*/    
     const [amount, setAmount] = useState(0)
     const [currency, setCurrency] = useState("BTC")
@@ -40,7 +25,21 @@ useEffect(() => {
     const [insufficientFunds,setInsufficientFunds] = useState(false)
     const [insufficientAssets,setInsufficientAssets] = useState(false)
     const [amountEntered,setAmountEntered] = useState(false)
+    const [isMobile, setIsMobile] = useState(true)
+/*---------------------- Manage If Screen Is Mobile ----------------------*/
 
+//Check if screen resembles mobile 
+const handleResize = () => {
+    if (window.innerWidth < 780) 
+        setIsMobile(true)
+    else 
+        setIsMobile(false)
+}
+//Event Listener if screen size changes
+useEffect(() => {
+    handleResize()
+    window.addEventListener("resize", handleResize)
+})
 /*---------------------- Collect And Store Appropriate Asset Price Values ----------------------*/
     useEffect(() => {
         const doit = async () => {
@@ -80,7 +79,6 @@ useEffect(() => {
         }
         doit()
     },[BNBDailyData])
-
 /*--------------- Function To Add Investment And Update Database Accordingly ---------------*/
     const addInvestment = async() => {
         if(amount === 0){
@@ -118,7 +116,6 @@ useEffect(() => {
             setAmount(0)
         }
     }
-
 /*-------------- Function To Change Coordinates Based On Asset Chosen --------------*/    
     function changeAsset(event){
         setAsset(event)
@@ -132,7 +129,6 @@ useEffect(() => {
             setYvalues(BNBYValues)
         }
     }
-
 /*---------- Calculate Price And Sellable Amount Of Chosen Asset ----------*/    
     let price = 0
     let sellableAmount = 0
@@ -148,14 +144,12 @@ useEffect(() => {
         price = round2dp(amount*coins[3].current_price)
         sellableAmount = round4dp(data.BNB)
     }
-
 /*---------- Reset User Input Values After Successful Transaction Added ----------*/
     function resetValues(){
         setInsufficientAssets(false)
         setInsufficientFunds(false)
         setAmountEntered(false)
     }
-
 /*--------------- Chart Of Selected Asset ---------------*/
     const assetChart = 
         <div className = "asset-chart">
@@ -182,7 +176,6 @@ useEffect(() => {
                     </select>
             </div>
         </div>
-
 /*--------------- Preview Investment Message ---------------*/
     const investmentMessage = (currency.length && buySell.length && amount > 0) ? 
         <div>
@@ -194,7 +187,6 @@ useEffect(() => {
                 {buySell} {amount} {currency} for {currencySymbol}{price}
             </h1>
         </div> : null
-
 /*--------------- Error Box Element For Incorrect User Inputs ---------------*/
     const errorBox = (insufficientAssets || insufficientFunds || amountEntered) ?
         <div className="error-box">
@@ -206,7 +198,6 @@ useEffect(() => {
             {insufficientAssets && <p className="error-text">Insufficient Assets</p>}
             {insufficientFunds && <p className="error-text">Insufficient Funds</p>}
         </div> : null
-
 /*--------------- Current Asset Prices Box ---------------*/
     const currentAssetPrices = 
         <div className="current-prices-container">
@@ -229,7 +220,6 @@ useEffect(() => {
                 </div>
             </div>
         </div>
-
 /*--------------- Balances View Box ---------------*/
     const viewBalances = 
         <div className="balance-overview">
@@ -250,7 +240,6 @@ useEffect(() => {
                 <h1 className="balance-text">{currencySymbol}{investmentsValue}</h1>
             </div>
         </div>
-
 /*--------------- Investments View Box ---------------*/
     const investmentsOverview = 
         <div className="investments-overview">
@@ -271,7 +260,6 @@ useEffect(() => {
                 <h1 className="investments-text">{currencySymbol}{round2dp(data.BNB * (coins[3] ? coins[3].current_price : 0))}</h1>
             </div>
         </div>
-
 /*--------------- Make Investment Box ---------------*/
     const makeInvestment =
         <div className="make-investment-container">
@@ -320,7 +308,6 @@ useEffect(() => {
                 <button className="submit-investment-button" onClick={addInvestment}>Submit</button>
             </div>
         </div>
-
 /*--------------- Return (Render Elements) ---------------*/
     return (
         <main className="investments"

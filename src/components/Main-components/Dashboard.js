@@ -22,9 +22,7 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
     const [dateShort,setDateShort] = useState(false)
     const [categoryShort,setCategoryShort] = useState(false)
     const [invalidSum,setInvalidSum] = useState(false)
-
-
-/*------------ Get Transaction Data And Render It Into A Table (Upto 10) ------------*/
+/*------------ Get Transaction Data And Render It Into A Table (Upto 10 elements) ------------*/
     var transactionElements = []
     let transactionsArray =[]
     const getTransactionsTable = async() => {
@@ -83,7 +81,6 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
 
     }
     getTransactionsTable()
-
 /*------------ Add Transaction To Database Function ------------*/
     const addExpenditure = async() => {
         resetErrorValues()
@@ -122,7 +119,6 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
             resetErrorValues()
         }
     }
-
 /*---------- Reset User Input Values After Successful Transaction Added ----------*/
     function resetValues() {
         setPurchase("")
@@ -130,7 +126,6 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
         setDate(todaysDate)
         setCategory("")
     } 
-
 /*--------------- Reset Error Box Values For Conditional Rendering ---------------*/
     function resetErrorValues(){
         setPurchaseShort(false)
@@ -139,7 +134,6 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
         setCategoryShort(false)
         setInvalidSum(false)
     }
-
 /*--------------- Error Box Element For Incorrect User Inputs ---------------*/
     const errorBox = (purchaseShort || sumShort || dateShort || categoryShort || invalidSum) ?
         <div className="error-box">
@@ -210,7 +204,6 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
                 </div>
             </div> 
         </div>
-
 /*--------------- Recent Transactions Grid ---------------*/
     const recentTransactions = 
         <div className="dashboard-recent-transactions-container">
@@ -224,7 +217,6 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
             </div>
             {transactionElements}
         </div>
-
 /*------------ Add New Expenditure Input Box ------------*/
     const addNewExpenditure = 
         <div className="expenditures-container">
@@ -322,5 +314,4 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
         </section>
     )
 }
-
 export default Dashboard

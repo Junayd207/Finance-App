@@ -16,7 +16,6 @@ function Signup() {
     const [passwordsMatch, setPasswordsMatch] = useState(false)
     const [invalidEmail, setInvalidEmail] = useState(false)
     const [isUnique, setIsUnique] = useState(true)
-    
 /*---------------------- Signup Function ----------------------*/    
     const signup = async () =>{
         resetValues()
@@ -49,7 +48,6 @@ function Signup() {
             }
         }
     }
-
 /*---------------------- Reset Error Box Values For Conditional Rendering ----------------------*/    
     function resetValues() {
         setPasswordShort(false)
@@ -57,7 +55,6 @@ function Signup() {
         setInvalidEmail(false)
         setIsUnique(true)
     }
-
 /*---------------------- Error Box Element For Incorrect User Inputs ----------------------*/    
     const errorBox = (!isUnique || passwordShort || passwordsMatch || invalidEmail) ?
         <div className="error-box">
@@ -70,7 +67,6 @@ function Signup() {
             {passwordsMatch && <p className="error-text">Passwords do not match</p>}
             {!isUnique && <p className="error-text">Sorry, email already in use</p>}
         </div> : null
-
 /*---------------------- Return (Render Elements) ----------------------*/    
     return (
         <main className="signup">

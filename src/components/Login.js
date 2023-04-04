@@ -14,7 +14,6 @@ function Login() {
     const [invalidUser, setInvalidUser] = useState(false)
     const [wrongPassword, setWrongPassword] = useState(false)
     const [tooManyAttempts, setTooManyAttempts] = useState(false)
-
 /*---------------------- Signin Function ----------------------*/    
     const signIn = async () =>{
         resetValues()
@@ -44,7 +43,6 @@ function Login() {
             }
         }
     }
-
 /*---------------------- Reset Error Box Values For Conditional Rendering ----------------------*/    
     function resetValues() {
         setInvalidEmail(false)
@@ -66,7 +64,6 @@ function Login() {
             {tooManyAttempts && <p className="error-text">Too Many Attempts, Please Try Again Later</p>}
 
         </div> : null
-
 /*---------------------- Return (Render Elements) ----------------------*/    
     return (
         <main className="login">

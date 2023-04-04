@@ -44,15 +44,13 @@ function AddCash({data, todaysDate, round2dp, investmentsValue, currencySymbol, 
         setSource("")
         setSum("")
     }
-
 /*--------------- Reset Error Box Values For Conditional Rendering ---------------*/
 function resetErrorValues(){
         setSourceShort(false)
         setSumShort(false)
         setDateShort(false)
     }
-
- /*--------------- Error Box Element For Incorrect User Inputs ---------------*/
+/*--------------- Error Box Element For Incorrect User Inputs ---------------*/
     const errorBox = (sourceShort || sumShort || dateShort) ?
         <div className="error-box">
             <div className="display-flex-between">
@@ -66,53 +64,52 @@ function resetErrorValues(){
 
  /*--------------- Add Cash Input Box ---------------*/
     const addCashInput = 
-    <div className="addCash-functions-container">
-        <div className="addCash-function">
-            <h3 className="addCash-function-title">Add Cash</h3>
-            {errorBox}
-            <div className="source-input"> 
-                <h1 className="source-input-text">Source:</h1>
-                <input 
-                    className="source-input-field"
-                    value={source}
-                    onChange={(event) => {
-                        const inputValue = event.target.value;
-                        if (inputValue.length <= 10) {
-                          setSource(inputValue.slice(0, 10));
-                        }
-                    }}  
-                />
-            </div>
-            <div className="sum-input"> 
-                <h1 className="sum-input-text">Sum:</h1>
-                <input 
-                    className="sum-input-field"
-                    type="number"
-                    onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
-                    value={sum}
-                    onChange={(event) => {
-                        const inputValue = event.target.value;
-                        const regex = /^(?!0\d)\d*(\.\d{0,2})?$/;
-                        if (inputValue === '' || (regex.test(inputValue) && parseFloat(inputValue) <= 10000000)) {
-                            setSum(inputValue);
-                        }
-                    }}
-                />
-            </div>
-            <div className="date-input"> 
-                <input 
-                    type="date"
-                    className="date-input-field"
-                    onChange={(event) => {setDate(event.target.value)}}
-                    defaultValue={todaysDate}
-                />
-            </div>
-            <div className="submit-addCash"> 
-                <button className="submit-addCash-button" onClick={addCash}>Submit</button>
+        <div className="addCash-functions-container">
+            <div className="addCash-function">
+                <h3 className="addCash-function-title">Add Cash</h3>
+                {errorBox}
+                <div className="source-input"> 
+                    <h1 className="source-input-text">Source:</h1>
+                    <input 
+                        className="source-input-field"
+                        value={source}
+                        onChange={(event) => {
+                            const inputValue = event.target.value;
+                            if (inputValue.length <= 10) {
+                                setSource(inputValue.slice(0, 10));
+                            }
+                        }}  
+                    />
+                </div>
+                <div className="sum-input"> 
+                    <h1 className="sum-input-text">Sum:</h1>
+                    <input 
+                        className="sum-input-field"
+                        type="number"
+                        onKeyDown={(e) =>["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
+                        value={sum}
+                        onChange={(event) => {
+                            const inputValue = event.target.value;
+                            const regex = /^(?!0\d)\d*(\.\d{0,2})?$/;
+                            if (inputValue === '' || (regex.test(inputValue) && parseFloat(inputValue) <= 10000000)) {
+                                setSum(inputValue);
+                            }
+                        }}
+                    />
+                </div>
+                <div className="date-input"> 
+                    <input 
+                        type="date"
+                        className="date-input-field"
+                        onChange={(event) => {setDate(event.target.value)}}
+                        defaultValue={todaysDate}
+                    />
+                </div>
+                <div className="submit-addCash"> 
+                    <button className="submit-addCash-button" onClick={addCash}>Submit</button>
+                </div>
             </div>
         </div>
-    </div>
-
 /*--------------- Balances View Box ---------------*/
     const viewBalances = 
         <div className="addcash-assets-overview">
@@ -133,7 +130,6 @@ function resetErrorValues(){
                 <h1 className="assets-text">{currencySymbol}{round2dp(investmentsValue)}</h1>
             </div>
         </div>
-
 /*--------------- Return (Render Elements) ---------------*/
     return (
         <section className="addCash"
@@ -157,5 +153,4 @@ function resetErrorValues(){
         </section>
     )
 }
-
 export default AddCash

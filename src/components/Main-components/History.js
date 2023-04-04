@@ -8,7 +8,6 @@ function History({data, round2dp, investmentsValue, currencySymbol, arrow, colla
 /*---------------------- Initialise State Variables ----------------------*/
     const [type, setType] = useState("All")
     const [category, setCategory] = useState("All")
-
 /*------------ Get Transaction Data And Render It Into A Table (Upto 50) ------------*/
     var transactionElements = []
     const getTransactionsTable = async() => {
@@ -65,7 +64,6 @@ function History({data, round2dp, investmentsValue, currencySymbol, arrow, colla
         }
     }
     getTransactionsTable()
-
 /*--------------- Recent Transactions Grid ---------------*/
     const recentTransactions = 
         <div className="history-recent-transactions-container">
@@ -81,7 +79,6 @@ function History({data, round2dp, investmentsValue, currencySymbol, arrow, colla
                 {transactionElements}
             </div>
         </div>
-
 /*--------------- Balances View Box ---------------*/
     const viewBalances = 
         <div className="assets-overview">
@@ -102,7 +99,6 @@ function History({data, round2dp, investmentsValue, currencySymbol, arrow, colla
                 <h1 className="assets-text">{currencySymbol}{round2dp(investmentsValue)}</h1>
             </div>
         </div>
-
 /*--------------- Filter Grid Input ---------------*/
     const filterGrid =
         <div className="filter-transactions-container">
@@ -139,7 +135,6 @@ function History({data, round2dp, investmentsValue, currencySymbol, arrow, colla
                 </div>
             </div>
         </div>
-
 /*--------------- Return (Render Elements) ---------------*/
     return (
         <main className="history"

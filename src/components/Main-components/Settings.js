@@ -7,12 +7,11 @@ import {db,auth} from "../../firebase";
 function Settings({arrow, collapsed}) {
 
 const [currency,setCurrency] = useState("")
-console.log(currency)
-
 
 function resetValues(){
     setCurrency("")
 }
+/*--------------- Change currency function ---------------*/
 const changeCurrency = async() => {
     if(currency.length === 0){
 
@@ -24,7 +23,7 @@ const changeCurrency = async() => {
         resetValues()
     }
 }
-
+/*--------------- Return (Render Elements) ---------------*/
 return (
     <main className="settings"
         style={{
