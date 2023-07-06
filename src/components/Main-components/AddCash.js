@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
-import {updateDoc, doc, increment} from "firebase/firestore";
-import {db,auth} from "../../firebase";
-import '../../css/AddCash.css';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import CloseIcon from '@mui/icons-material/Close';
+import React, { useState } from 'react'
+import { updateDoc, doc, increment } from "firebase/firestore"
 
+import LocalAtmIcon from '@mui/icons-material/LocalAtm'
+import CloseIcon from '@mui/icons-material/Close'
+
+import { db,auth } from "../../firebase"
+import '../../css/AddCash.css'
 
 function AddCash({data, todaysDate, round2dp, investmentsValue, currencySymbol, arrow, collapsed}) {
 /*---------------------- Initialise State Variables ----------------------*/

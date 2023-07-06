@@ -1,14 +1,16 @@
-import React, {useState, useEffect} from 'react';
-import {updateDoc, doc, increment} from "firebase/firestore";
-import {db,auth} from "../../firebase";
-import '../../css/Investments.css';
-import Plot from 'react-plotly.js';
-import moment from 'moment';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
-import SsidChartIcon from '@mui/icons-material/SsidChart';
-import CloseIcon from '@mui/icons-material/Close';
+import React, { useState, useEffect } from 'react'
+import { updateDoc, doc, increment } from "firebase/firestore"
+
+import Plot from 'react-plotly.js'
+import moment from 'moment'
+import LocalAtmIcon from '@mui/icons-material/LocalAtm'
+import ShowChartIcon from '@mui/icons-material/ShowChart'
+import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin'
+import SsidChartIcon from '@mui/icons-material/SsidChart'
+import CloseIcon from '@mui/icons-material/Close'
+
+import { db,auth } from "../../firebase"
+import '../../css/Investments.css'
 
 function Investments({todaysDate ,data, coins, round2dp, investmentsValue, currencySymbol, BTCDailyData, ETHDailyData, 
                     BNBDailyData, arrow, collapsed, round4dp}) {
@@ -18,10 +20,10 @@ function Investments({todaysDate ,data, coins, round2dp, investmentsValue, curre
     const [buySell, setBuySell] = useState("Buy")
     const [Yvalues, setYvalues] = useState([])
     const [asset, setAsset] = useState("BTC")
-    const [AssetXValues,setAssetXValues] = useState([])
-    const [BTCYValues,setBTCYValues] = useState([])
-    const [ETHYValues,setETHYValues] = useState([])
-    const [BNBYValues,setBNBYValues] = useState([])
+    const [AssetXValues] = useState([])
+    const [BTCYValues] = useState([])
+    const [ETHYValues] = useState([])
+    const [BNBYValues] = useState([])
     const [insufficientFunds,setInsufficientFunds] = useState(false)
     const [insufficientAssets,setInsufficientAssets] = useState(false)
     const [amountEntered,setAmountEntered] = useState(false)
@@ -60,7 +62,6 @@ useEffect(() => {
         const doit = async () => {
             if(ETHDailyData && ETHDailyData.length > 1){
                 for(let i = 0; i < ETHDailyData.length-1;i++){
-                    var u = new Date(ETHDailyData[i][0]);
                     ETHYValues.push(ETHDailyData[i][1])
                 }
             }
@@ -72,7 +73,6 @@ useEffect(() => {
         const doit = async () => {
             if(BNBDailyData && BNBDailyData.length > 1){
                 for(let i = 0; i < BNBDailyData.length-1;i++){
-                    var v = new Date(BNBDailyData[i][0]);
                     BNBYValues.push(BNBDailyData[i][1])
                 }
             }

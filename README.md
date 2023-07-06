@@ -1,3 +1,12 @@
+- This is the code for a finance management application in react that uses HTML, CSS and Javascript
+- The URL for the website can be found at https://mjh942.netlify.app/
+- The website is best used in 125% zoom due to localhost unexpectedly being on that % throughout
+the development process
+- If the website doesnt work the easiest way to run the site is to upload and deploy the build folder 
+onto netlify and run the website yourself
+- Below are the basic React Instructions on how to run the application if all fails
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

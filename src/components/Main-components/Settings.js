@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
-import '../../css/Settings.css';
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
-import {updateDoc, doc} from "firebase/firestore";
-import {db,auth} from "../../firebase";
+import React, { useState } from 'react'
+
+import { updateDoc, doc } from "firebase/firestore"
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
+
+import { db,auth } from "../../firebase"
+import '../../css/Settings.css'
 
 function Settings({arrow, collapsed}) {
 

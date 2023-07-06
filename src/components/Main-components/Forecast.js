@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import moment from 'moment';
 import '../../css/Forecast.css';
-import { PolynomialRegression } from 'ml-regression';
-
-
 
 function Forecast({data, BTCDailyData, ETHDailyData, BNBDailyData, todaysDate, arrow, collapsed, currencySymbol}) {
     const [portfolioValue, setPortfolioValue] = useState([])

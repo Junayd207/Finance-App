@@ -1,8 +1,10 @@
-import React,{useState} from 'react';
-import {nanoid} from "nanoid";
-import '../../css/History.css';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import React, { useState } from 'react'
+import { nanoid } from "nanoid"
+
+import LocalAtmIcon from '@mui/icons-material/LocalAtm'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
+
+import '../../css/History.css'
 
 function History({data, round2dp, investmentsValue, currencySymbol, arrow, collapsed}) {
 /*---------------------- Initialise State Variables ----------------------*/

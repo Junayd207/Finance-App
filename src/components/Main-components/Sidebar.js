@@ -1,17 +1,18 @@
-import React, {useState} from "react";
-import { auth } from "../../firebase";
-import { signOut } from "firebase/auth";
-import { Helmet } from "react-helmet"
-import "../../css/Sidebar.css";
-import SidebarOption from "./SidebarOption";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import LocalAtmIcon from "@mui/icons-material/LocalAtm";
-import ShowChartIcon from "@mui/icons-material/ShowChart";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import HistoryIcon from "@mui/icons-material/History";
-import PieChartIcon from '@mui/icons-material/PieChart';
-import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/Logout";
+import React from "react"
+import { auth } from "../../firebase"
+import { signOut } from "firebase/auth"
+
+import DashboardIcon from "@mui/icons-material/Dashboard"
+import LocalAtmIcon from "@mui/icons-material/LocalAtm"
+import ShowChartIcon from "@mui/icons-material/ShowChart"
+import QueryStatsIcon from "@mui/icons-material/QueryStats"
+import HistoryIcon from "@mui/icons-material/History"
+import PieChartIcon from '@mui/icons-material/PieChart'
+import SettingsIcon from "@mui/icons-material/Settings"
+import LogoutIcon from "@mui/icons-material/Logout"
+
+import SidebarOption from "./SidebarOption"
+import "../../css/Sidebar.css"
 
 const Sidebar = ({collapsed}) => {
 
@@ -51,7 +52,6 @@ const Sidebar = ({collapsed}) => {
                 </div>
             </div>
         </main>
-
     );
 };
 

@@ -1,21 +1,21 @@
-import React, { useState, useEffect} from 'react';
-import {Routes, Route} from "react-router-dom";
-import {db, auth} from "./firebase";
-import {doc, onSnapshot, query} from "firebase/firestore";
-import './App.css';
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import Sidebar from "./components/Main-components/Sidebar";
-import Dashboard from "./components/Main-components/Dashboard";
-import AddCash from './components/Main-components/AddCash';
-import Investments from './components/Main-components/Investments';
-import Forecast from './components/Main-components/Forecast';
-import History from './components/Main-components/History';
-import Analytics from './components/Main-components/Analytics';
-import Settings from './components/Main-components/Settings';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import axios from "axios";
+import React, { useState, useEffect } from 'react'
+import { Routes, Route } from "react-router-dom"
+import { db, auth } from "./firebase"
+import { doc, onSnapshot, query } from "firebase/firestore"
+import './App.css'
+import Login from "./components/Login"
+import Signup from "./components/Signup"
+import Sidebar from "./components/Main-components/Sidebar"
+import Dashboard from "./components/Main-components/Dashboard"
+import AddCash from './components/Main-components/AddCash'
+import Investments from './components/Main-components/Investments'
+import Forecast from './components/Main-components/Forecast'
+import History from './components/Main-components/History'
+import Analytics from './components/Main-components/Analytics'
+import Settings from './components/Main-components/Settings'
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import axios from "axios"
 
 
 function App() { 

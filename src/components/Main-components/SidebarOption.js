@@ -3,7 +3,7 @@ import '../../css/SidebarOption.css';
 
 function SidebarOption({text, Icon, link, collapsed}) {
     
-    let lastURL ="/" + window.location.href.substring(window.location.href.lastIndexOf("/")+1) 
+    let lastURL = "/" + window.location.href.substring(window.location.href.lastIndexOf("/")+1) 
 
 /*--------------- Return (Render Elements) ---------------*/
     return (

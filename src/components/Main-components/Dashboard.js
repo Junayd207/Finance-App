@@ -1,14 +1,17 @@
-import React, {useState} from 'react';
-import {db,auth} from "../../firebase";
-import { doc, updateDoc, increment } from "firebase/firestore"; 
-import {nanoid} from "nanoid";
-import '../../css/Dashboard.css';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import HomeIcon from '@mui/icons-material/Home';
-import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
-import CloseIcon from '@mui/icons-material/Close';
+import React, { useState } from 'react'
+import { doc, updateDoc, increment } from "firebase/firestore"
+import { nanoid } from "nanoid"
+
+import LocalAtmIcon from '@mui/icons-material/LocalAtm'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import RestaurantIcon from '@mui/icons-material/Restaurant'
+import HomeIcon from '@mui/icons-material/Home'
+import AllInclusiveIcon from '@mui/icons-material/AllInclusive'
+import CloseIcon from '@mui/icons-material/Close'
+
+import { db,auth } from "../../firebase"
+import '../../css/Dashboard.css'
+
 
 function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol, shopping, foodDrinks, billsUtilities, others,
                     arrow, collapsed}) {
@@ -290,7 +293,7 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
         </div>
 /*--------------- Return (Render Elements) ---------------*/
     return (
-        <section className="dashboard" 
+        <div className="dashboard"
             style={{
                 filter: !collapsed ? 'grayscale(100%)' : 'grayscale(0%)',
                 opacity: !collapsed ? '0.5' : '1',
@@ -311,7 +314,7 @@ function Dashboard({data, todaysDate, round2dp, investmentsValue, currencySymbol
                     </div>  
                 </div>
             </div>
-        </section>
+        </div>
     )
 }
 export default Dashboard

@@ -11,17 +11,21 @@ function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [invalidEmail, setInvalidEmail] = useState(false)
+    const [invalidPassword, setInvalidPassword] = useState(false)
     const [invalidUser, setInvalidUser] = useState(false)
     const [wrongPassword, setWrongPassword] = useState(false)
     const [tooManyAttempts, setTooManyAttempts] = useState(false)
 /*---------------------- Signin Function ----------------------*/    
     const signIn = async () =>{
         resetValues()
+        if(password.length === 0){
+            setInvalidPassword(true)
+        }
         if(!email.match(/([a-zA-Z0-9_.+-]+@[a-zA-Z0-9_.+-]+\.[a-zA-Z0-9_.+-]+)/)){
             setInvalidEmail(true)
             console.log("email format invalid")
         }
-        else{
+        if(!invalidEmail && !invalidPassword){
             try{
                 await signInWithEmailAndPassword(auth,email,password).then
                     (async() => {
@@ -52,7 +56,7 @@ function Login() {
     }
 
 /*---------------------- Error Box Element For Incorrect User Inputs ----------------------*/    
-    const errorBox = (invalidUser || wrongPassword || invalidEmail || tooManyAttempts) ?
+    const errorBox = (invalidUser || wrongPassword || invalidEmail || tooManyAttempts || invalidPassword) ?
         <div className="error-box">
             <div className="display-flex-between">
                 <p className="error-title">Error</p>
@@ -62,7 +66,7 @@ function Login() {
             {invalidUser && <p className="error-text">User Not Found</p>}
             {wrongPassword && <p className="error-text">Password Incorrect, Please Try Again</p>}
             {tooManyAttempts && <p className="error-text">Too Many Attempts, Please Try Again Later</p>}
-
+            {invalidPassword && <p className="error-text">Invalid Password</p>}
         </div> : null
 /*---------------------- Return (Render Elements) ----------------------*/    
     return (
