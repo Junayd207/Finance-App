@@ -21,7 +21,7 @@ function Analytics({round2dp, monthlyShopping, monthlyFoodDrinks, monthlyBillsUt
         type:"pie",
         values: [round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0)),
                 round2dp(data.ETH * (coins[1] ? coins[1].current_price : 0)),
-                round2dp(data.BNB * (coins[3] ? coins[3].current_price : 0))],
+                round2dp(data.BNB * (coins[4] ? coins[4].current_price : 0))],
         labels: ["BTC","ETH","BNB"],
         textinfo: "label+percent",
         textposition: "inside",

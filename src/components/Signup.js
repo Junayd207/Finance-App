@@ -63,7 +63,7 @@ function Signup() {
                 <CloseIcon onClick={(e) => resetValues()} sx={{cursor: "pointer"}}/>
             </div>
             {invalidEmail && <p className="error-text">Invalid email</p>}
-            {passwordShort && <p className="error-text">Password too short, must be at least 4 characters</p>}
+            {passwordShort && <p className="error-text">Password too short, must be at least 6 characters</p>}
             {passwordsMatch && <p className="error-text">Passwords do not match</p>}
             {!isUnique && <p className="error-text">Sorry, email already in use</p>}
         </div> : null

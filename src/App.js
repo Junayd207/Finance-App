@@ -96,7 +96,7 @@ function App() {
         const getData = async () => {
             try {
               const res = await axios.get(
-                `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${data.currencySymbol}&order=market_cap_desc&per_page=4&page=1&sparkline=true`
+                `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${data.currencySymbol}&order=market_cap_desc&per_page=5&page=1&sparkline=true`
               );
               setCoins(res.data);
             } catch (error) {
@@ -135,7 +135,7 @@ function App() {
     let investmentsValue = 0;
     if(data){investmentsValue = (round2dp(data.BTC * (coins[0] ? coins[0].current_price : 0) + 
                 data.ETH * (coins[1] ? coins[1].current_price : 0) +
-                data.BNB * (coins[3] ? coins[3].current_price : 0)))}
+                data.BNB * (coins[4] ? coins[4].current_price : 0)))}
 /*-------------- Calculate This Months Expenses For Each Catergory --------------*/
     let firstMonthDate = todaysDate.substring(0,8) + "01"
     useEffect(() => {

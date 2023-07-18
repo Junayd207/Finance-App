@@ -141,7 +141,7 @@ useEffect(() => {
         sellableAmount = round4dp(data.ETH)
     }
     else if(currency === "BNB"){
-        price = round2dp(amount*coins[3].current_price)
+        price = round2dp(amount*coins[4].current_price)
         sellableAmount = round4dp(data.BNB)
     }
 /*---------- Reset User Input Values After Successful Transaction Added ----------*/
@@ -216,7 +216,7 @@ useEffect(() => {
                 </div>
                 <div className="current-prices-overview-container">
                     <h1 className="current-price-text">BNB:</h1>
-                    <h1 className="current-price-text">{currencySymbol}{coins[3] ? coins[3].current_price : ""}</h1>
+                    <h1 className="current-price-text">{currencySymbol}{coins[4] ? coins[4].current_price : ""}</h1>
                 </div>
             </div>
         </div>
@@ -257,7 +257,7 @@ useEffect(() => {
             </div>
             <div className="investments-overview-container">
                 <h1 className="investments-text">BNB: {round4dp(data.BNB)}</h1>
-                <h1 className="investments-text">{currencySymbol}{round2dp(data.BNB * (coins[3] ? coins[3].current_price : 0))}</h1>
+                <h1 className="investments-text">{currencySymbol}{round2dp(data.BNB * (coins[4] ? coins[4].current_price : 0))}</h1>
             </div>
         </div>
 /*--------------- Make Investment Box ---------------*/
