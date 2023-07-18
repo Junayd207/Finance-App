@@ -1,5 +1,5 @@
 - This is the code for a finance management application in react that uses HTML, CSS and Javascript
-- The URL for the website can be found at https://mjh942.netlify.app/
+- The URL for the website can be found at https://finance-app-jun207.netlify.app/
 - The website is best used in 125% zoom due to localhost unexpectedly being on that % throughout
 the development process
 - If the website doesnt work the easiest way to run the site is to upload and deploy the build folder 
